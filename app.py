@@ -29,6 +29,14 @@ def create_app(settings: Optional[Settings] = None) -> Flask:
     if settings is None:
         settings = get_settings()
 
+    # For development testing only - set a default API token if not provided
+    if not getattr(settings, "api_token", None):
+        import os
+
+        if not os.environ.get("API_TOKEN"):
+            os.environ["API_TOKEN"] = "dev_token_for_testing"
+            settings = get_settings()
+
     app = Flask(__name__)
     app.config.from_object(settings)
 

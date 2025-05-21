@@ -1,19 +1,15 @@
-# flaskllm/llm/openai_handler.py
+# flaskllm/llm/openai_handler_v2.py
 """
-OpenAI Handler Module
+OpenAI Handler Module V2
 
-This module implements the LLM handler for OpenAI's API.
+This module implements a more robust LLM handler for OpenAI's API with comprehensive
+error handling for v1.x of the OpenAI Python library.
 """
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import openai
-from openai import (
-    APIConnectionError,
-    APIError,
-    AuthenticationError,
-    OpenAI,
-    RateLimitError,
-)
+from openai import OpenAI
+from openai.types.chat import ChatCompletion
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -29,10 +25,10 @@ from core.logging import get_logger
 logger = get_logger(__name__)
 
 
-class OpenAIHandler:
-    """Handler for processing prompts with OpenAI's API."""
+class OpenAIHandlerV2:
+    """Improved handler for processing prompts with OpenAI's API."""
 
-    def __init__(self, api_key: str, model: str = "gpt-4", timeout: int = 30):
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
         """
         Initialize OpenAI handler.
 
@@ -44,10 +40,29 @@ class OpenAIHandler:
         self.api_key = api_key
         self.model = model
         self.timeout = timeout
-        self.client = OpenAI(api_key=api_key, timeout=timeout)
+
+        # Initialize OpenAI client with better error handling
+        try:
+            self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+            logger.info(f"OpenAI client initialized successfully with model {model}")
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+            raise LLMAPIError(f"Failed to initialize OpenAI client: {str(e)}")
 
     @retry(
-        retry=retry_if_exception_type((APIError, APIConnectionError, RateLimitError)),
+        # Use the proper exception types for OpenAI v1.x
+        retry=retry_if_exception_type(
+            (
+                openai.APIError,
+                openai.APIConnectionError,
+                openai.RateLimitError,
+                openai.APITimeoutError,
+            )
+        ),
         wait=wait_exponential(multiplier=1, min=2, max=30),
         stop=stop_after_attempt(3),
     )
@@ -80,41 +95,62 @@ class OpenAIHandler:
             # Log the request (without the full prompt for privacy)
             logger.info(
                 "Sending request to OpenAI",
-                model=self.model,
-                prompt_length=len(prompt),
-                source=source,
-                language=language,
-                type=type,
+                extra={
+                    "model": self.model,
+                    "prompt_length": len(prompt),
+                    "source": source,
+                    "language": language,
+                    "type": type,
+                },
             )
 
-            # Send request to OpenAI
-            response = self.client.chat.completions.create(
+            # Send request to OpenAI with proper error handling
+            response: ChatCompletion = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
                 temperature=0.3,  # Lower temperature for more focused responses
                 max_tokens=1024,  # Adjust based on expected response length
             )
 
-            # Extract and return the response content
-            if not response.choices or not response.choices[0].message:
+            # Extract and return the response content with proper null checking
+            if not response.choices or len(response.choices) == 0:
+                logger.error("Empty response from OpenAI API")
                 raise LLMAPIError("Empty response from OpenAI API")
 
-            return response.choices[0].message.content or ""
+            message = response.choices[0].message
+            if not message or not message.content:
+                logger.error("Empty message content from OpenAI API")
+                raise LLMAPIError("Empty message content from OpenAI API")
 
-        except AuthenticationError as e:
-            logger.error("OpenAI authentication error", error=str(e))
-            raise LLMAPIError("Authentication error with OpenAI API")
+            logger.info("Successfully received response from OpenAI API")
+            return message.content
 
-        except RateLimitError as e:
-            logger.error("OpenAI rate limit exceeded", error=str(e))
-            raise LLMAPIError("Rate limit exceeded with OpenAI API")
+        except openai.AuthenticationError as e:
+            logger.error(f"OpenAI authentication error: {str(e)}")
+            raise LLMAPIError(f"Authentication error with OpenAI API: {str(e)}")
 
-        except APIError as e:
-            logger.error("OpenAI API error", error=str(e))
+        except openai.RateLimitError as e:
+            logger.error(f"OpenAI rate limit exceeded: {str(e)}")
+            raise LLMAPIError(f"Rate limit exceeded with OpenAI API: {str(e)}")
+
+        except openai.BadRequestError as e:
+            logger.error(f"Bad request to OpenAI API: {str(e)}")
+            raise LLMAPIError(f"Bad request to OpenAI API: {str(e)}")
+
+        except openai.APIConnectionError as e:
+            logger.error(f"Connection error with OpenAI API: {str(e)}")
+            raise LLMAPIError(f"Connection error with OpenAI API: {str(e)}")
+
+        except openai.APITimeoutError as e:
+            logger.error(f"Timeout error with OpenAI API: {str(e)}")
+            raise LLMAPIError(f"Timeout error with OpenAI API: {str(e)}")
+
+        except openai.APIError as e:
+            logger.error(f"OpenAI API error: {str(e)}")
             raise LLMAPIError(f"Error from OpenAI API: {str(e)}")
 
         except Exception as e:
-            logger.exception("Unexpected error with OpenAI API", error=str(e))
+            logger.exception(f"Unexpected error with OpenAI API: {str(e)}")
             raise LLMAPIError(f"Unexpected error: {str(e)}")
 
     def _create_messages(
