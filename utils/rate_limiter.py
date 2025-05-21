@@ -90,7 +90,9 @@ def configure_rate_limiting(app: Flask) -> None:
             remote_addr=request.remote_addr,
         )
 
-        error = RateLimitExceeded(message="Rate limit exceeded", )
+        error = RateLimitExceeded(
+            message="Rate limit exceeded",
+        )
 
         response = jsonify(error.to_dict())
         response.status_code = error.status_code
