@@ -17,7 +17,7 @@ def create_v1_blueprint() -> Blueprint:
     v1_bp = Blueprint("v1", __name__, url_prefix="/v1")
 
     # Import routes to register them with the blueprint
-    from flaskllm.api.v1.routes import register_routes
+    from api.v1.routes import register_routes
 
     register_routes(v1_bp)
 

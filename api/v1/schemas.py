@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional, Type, TypeVar
 
 from pydantic import BaseModel, Field, validator
 
-from flaskllm.core.exceptions import InvalidInputError
+from core.exceptions import InvalidInputError
 
 
 class PromptSource(str, Enum):

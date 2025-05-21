@@ -387,7 +387,7 @@ model_checkpoints/
 .transformers_cache/
 
 # Development tools and environments
-.pre-commit-config.yaml
+# .pre-commit-config.yaml  # Commented out to allow committing pre-commit config
 .precommit/
 /.venv/*
 /.venvsource/*
@@ -439,7 +439,7 @@ pants.pex
 *.mo
 *.pot
 *.po~
-*.swp 
+*.swp
 *.bak
 *~
 .tmp/

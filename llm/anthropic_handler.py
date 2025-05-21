@@ -95,14 +95,14 @@ class AnthropicHandler:
             # Extract and return the response content
             if not response.content:
                 raise LLMAPIError("Empty response from Anthropic API")
-            
+
             # Get the first content block
             content_block = response.content[0]
-            
+
             # Check if it's a text block and has text content
             if content_block.type != "text" or not content_block.text:
                 raise LLMAPIError("Invalid or empty response from Anthropic API")
-                
+
             # Text is now guaranteed to be a string
             result = cast(str, content_block.text)
             return result

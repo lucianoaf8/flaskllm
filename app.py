@@ -5,13 +5,14 @@ Main application factory for FlaskLLM API.
 Creates and configures the Flask application.
 """
 from typing import Optional
+
 from flask import Flask
 
-from core.config import get_settings, Settings
+from api import create_api_blueprint
+from core.config import Settings, get_settings
+from core.exceptions import setup_error_handlers
 from core.logging import configure_logging
 from core.middleware import setup_middleware
-from api import create_api_blueprint
-from core.exceptions import setup_error_handlers
 
 
 def create_app(settings: Optional[Settings] = None) -> Flask:
@@ -30,6 +31,9 @@ def create_app(settings: Optional[Settings] = None) -> Flask:
 
     app = Flask(__name__)
     app.config.from_object(settings)
+
+    # Store settings in app config - Add this line
+    app.config["SETTINGS"] = settings
 
     # Setup logging
     configure_logging(app)

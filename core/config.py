@@ -25,6 +25,8 @@ class LLMProvider(str, Enum):
 
     OPENAI = "openai"
     ANTHROPIC = "anthropic"
+    XAI = "xai"
+    OPEN_ROUTINE = "open_routine"
     # Add other providers as needed
 
 
@@ -63,6 +65,14 @@ class Settings(BaseSettings):
         default="claude-2", description="Anthropic model to use"
     )
 
+    # XAI settings (optional)
+    xai_api_key: Optional[str] = Field(default=None, description="XAI API key")
+
+    # Open Routine settings (optional)
+    open_routine_api_key: Optional[str] = Field(
+        default=None, description="Open Routine API key"
+    )
+
     # Request configuration
     request_timeout: int = Field(
         default=30, description="Timeout for LLM API requests in seconds"
@@ -97,6 +107,22 @@ class Settings(BaseSettings):
         if values.get("llm_provider") == LLMProvider.ANTHROPIC and not v:
             raise ValueError(
                 "Anthropic API key is required when using Anthropic provider"
+            )
+        return v
+
+    @validator("xai_api_key")
+    def validate_xai_api_key(cls, v, values):
+        """Validate that XAI API key is provided when XAI is selected."""
+        if values.get("llm_provider") == LLMProvider.XAI and not v:
+            raise ValueError("XAI API key is required when using XAI provider")
+        return v
+
+    @validator("open_routine_api_key")
+    def validate_open_routine_api_key(cls, v, values):
+        """Validate that Open Routine API key is provided when Open Routine is selected."""
+        if values.get("llm_provider") == LLMProvider.OPEN_ROUTINE and not v:
+            raise ValueError(
+                "Open Routine API key is required when using Open Routine provider"
             )
         return v
 

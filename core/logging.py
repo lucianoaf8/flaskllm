@@ -15,18 +15,27 @@ import structlog
 from flask import Flask, request
 
 
-def request_id_contextualizer() -> Dict[str, str]:
+def request_id_contextualizer(logger, method_name, event_dict):
     """
     Add request ID to log context if available.
 
+    Args:
+        logger: The logger instance
+        method_name: The name of the logging method
+        event_dict: The current event dictionary
+
     Returns:
-        Dictionary with request ID context
+        Updated event dictionary with request ID
     """
-    if request:
-        # Use existing X-Request-ID header or generate a new one
-        request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
-        return {"request_id": request_id}
-    return {}
+    try:
+        if request:
+            # Use existing X-Request-ID header or generate a new one
+            request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+            event_dict["request_id"] = request_id
+    except:
+        # In case we're outside a request context
+        pass
+    return event_dict
 
 
 def configure_logging(app: Optional[Flask] = None) -> None:

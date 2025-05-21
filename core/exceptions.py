@@ -2,8 +2,9 @@
 """
 Custom exceptions for the application.
 """
-from typing import Dict, Any, Optional
-from flask import jsonify, current_app, request
+from typing import Any, Dict, Optional
+
+from flask import current_app, jsonify, request
 
 
 class APIError(Exception):

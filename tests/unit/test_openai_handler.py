@@ -2,13 +2,14 @@
 """
 Unit tests for OpenAI handler.
 """
-import pytest
-from unittest.mock import patch, MagicMock
-import openai
+from unittest.mock import MagicMock, patch
 
-from llm.openai_handler import OpenAIHandler
-from api.v1.schemas import PromptType, PromptSource
+import openai
+import pytest
+
+from api.v1.schemas import PromptSource, PromptType
 from core.exceptions import LLMAPIError
+from llm.openai_handler import OpenAIHandler
 
 
 class TestOpenAIHandler:

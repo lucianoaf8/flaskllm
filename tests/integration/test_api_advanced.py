@@ -3,8 +3,9 @@
 Advanced integration tests for the API.
 """
 import json
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from core.exceptions import LLMAPIError, RateLimitExceededError
 
@@ -26,13 +27,9 @@ def test_webhook_with_all_parameters(mock_process_prompt, client, auth_headers):
         "prompt": "Process this text",
         "source": "email",
         "language": "es",
-        "type": "translation"
+        "type": "translation",
     }
-    response = client.post(
-        "/api/v1/webhook",
-        json=data,
-        headers=auth_headers
-    )
+    response = client.post("/api/v1/webhook", json=data, headers=auth_headers)
 
     # Verify response
     assert response.status_code == 200
@@ -42,10 +39,7 @@ def test_webhook_with_all_parameters(mock_process_prompt, client, auth_headers):
 
     # Verify mock was called with correct parameters
     mock_process_prompt.assert_called_once_with(
-        prompt="Process this text",
-        source="email",
-        language="es",
-        type="translation"
+        prompt="Process this text", source="email", language="es", type="translation"
     )
 
 
@@ -59,9 +53,7 @@ def test_webhook_llm_api_error(mock_get_llm_handler, client, auth_headers):
 
     # Send request
     response = client.post(
-        "/api/v1/webhook",
-        json={"prompt": "Test prompt"},
-        headers=auth_headers
+        "/api/v1/webhook", json={"prompt": "Test prompt"}, headers=auth_headers
     )
 
     # Verify error response
@@ -76,14 +68,14 @@ def test_webhook_rate_limit_exceeded(mock_get_llm_handler, client, auth_headers)
     """Test webhook with rate limit exceeded error."""
     # Setup mock to raise a rate limit error
     mock_handler = MagicMock()
-    mock_handler.process_prompt.side_effect = RateLimitExceededError("Rate limit exceeded")
+    mock_handler.process_prompt.side_effect = RateLimitExceededError(
+        "Rate limit exceeded"
+    )
     mock_get_llm_handler.return_value = mock_handler
 
     # Send request
     response = client.post(
-        "/api/v1/webhook",
-        json={"prompt": "Test prompt"},
-        headers=auth_headers
+        "/api/v1/webhook", json={"prompt": "Test prompt"}, headers=auth_headers
     )
 
     # Verify error response
@@ -97,13 +89,9 @@ def test_webhook_invalid_content_type(client, auth_headers):
     """Test webhook with invalid content type."""
     # Remove content type header
     headers = {"X-API-Token": auth_headers["X-API-Token"]}
-    
+
     # Send request with text instead of JSON
-    response = client.post(
-        "/api/v1/webhook",
-        data="This is not JSON",
-        headers=headers
-    )
+    response = client.post("/api/v1/webhook", data="This is not JSON", headers=headers)
 
     # Verify error response
     assert response.status_code == 400
@@ -115,7 +103,7 @@ def test_cors_headers(client):
     """Test CORS headers in response."""
     # Send OPTIONS request to test CORS preflight
     response = client.options("/api/v1/health")
-    
+
     # Verify CORS headers
     assert "Access-Control-Allow-Origin" in response.headers
     assert "Access-Control-Allow-Headers" in response.headers
@@ -125,7 +113,7 @@ def test_cors_headers(client):
 def test_rate_limiting():
     """
     Test rate limiting functionality.
-    
+
     Note: This test is commented out because rate limiting is disabled in test mode.
     In a real implementation, you would need to enable rate limiting for this test
     and then make multiple requests to trigger the rate limit.

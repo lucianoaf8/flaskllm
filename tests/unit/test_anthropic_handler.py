@@ -2,12 +2,13 @@
 """
 Tests for the Anthropic LLM handler.
 """
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from llm.anthropic_handler import AnthropicHandler
-from core.exceptions import LLMAPIError
+import pytest
+
 from api.v1.schemas import PromptSource, PromptType
+from core.exceptions import LLMAPIError
+from llm.anthropic_handler import AnthropicHandler
 
 
 class TestAnthropicHandler:
@@ -24,11 +25,11 @@ class TestAnthropicHandler:
         # Setup mock response
         mock_client = MagicMock()
         mock_anthropic.return_value = mock_client
-        
+
         mock_content = MagicMock()
         mock_content.type = "text"
         mock_content.text = "Test response"
-        
+
         mock_response = MagicMock()
         mock_response.content = [mock_content]
         mock_client.messages.create.return_value = mock_response
@@ -51,11 +52,11 @@ class TestAnthropicHandler:
         # Setup mock
         mock_client = MagicMock()
         mock_anthropic.return_value = mock_client
-        
+
         mock_content = MagicMock()
         mock_content.type = "text"
         mock_content.text = "Test translation"
-        
+
         mock_response = MagicMock()
         mock_response.content = [mock_content]
         mock_client.messages.create.return_value = mock_response
@@ -65,12 +66,12 @@ class TestAnthropicHandler:
             prompt="Translate this text",
             source=PromptSource.EMAIL,
             language="es",
-            type=PromptType.TRANSLATION
+            type=PromptType.TRANSLATION,
         )
 
         # Verify result
         assert result == "Test translation"
-        
+
         # Verify system prompt includes the parameters
         call_kwargs = mock_client.messages.create.call_args.kwargs
         system_prompt = call_kwargs["system"]
@@ -110,7 +111,9 @@ class TestAnthropicHandler:
         # Setup mock to raise an auth error
         mock_client = MagicMock()
         mock_anthropic.return_value = mock_client
-        mock_client.messages.create.side_effect = anthropic.AuthenticationError("Auth Error")
+        mock_client.messages.create.side_effect = anthropic.AuthenticationError(
+            "Auth Error"
+        )
 
         # Verify exception is raised and wrapped
         with pytest.raises(LLMAPIError, match="Authentication error"):
@@ -122,7 +125,9 @@ class TestAnthropicHandler:
         # Setup mock to raise a rate limit error
         mock_client = MagicMock()
         mock_anthropic.return_value = mock_client
-        mock_client.messages.create.side_effect = anthropic.RateLimitError("Rate limit exceeded")
+        mock_client.messages.create.side_effect = anthropic.RateLimitError(
+            "Rate limit exceeded"
+        )
 
         # Verify exception is raised and wrapped
         with pytest.raises(LLMAPIError, match="Rate limit exceeded"):
@@ -133,40 +138,46 @@ class TestAnthropicHandler:
         # Test base prompt
         prompt = handler._create_system_prompt()
         assert "AI assistant" in prompt
-        
+
         # Test email source
         prompt = handler._create_system_prompt(source=PromptSource.EMAIL)
         assert "email" in prompt.lower()
-        
+
         # Test meeting source
         prompt = handler._create_system_prompt(source=PromptSource.MEETING)
         assert "meeting" in prompt.lower()
-        
+
         # Test document source
         prompt = handler._create_system_prompt(source=PromptSource.DOCUMENT)
         assert "document" in prompt.lower()
-        
+
         # Test summary type
         prompt = handler._create_system_prompt(type=PromptType.SUMMARY)
         assert "summary" in prompt.lower()
-        
+
         # Test keywords type
         prompt = handler._create_system_prompt(type=PromptType.KEYWORDS)
         assert "keywords" in prompt.lower()
-        
+
         # Test sentiment type
         prompt = handler._create_system_prompt(type=PromptType.SENTIMENT)
         assert "sentiment" in prompt.lower()
-        
+
         # Test entities type
         prompt = handler._create_system_prompt(type=PromptType.ENTITIES)
         assert "entities" in prompt.lower()
-        
+
         # Test translation type with language
-        prompt = handler._create_system_prompt(type=PromptType.TRANSLATION, language="fr")
+        prompt = handler._create_system_prompt(
+            type=PromptType.TRANSLATION, language="fr"
+        )
         assert "translate" in prompt.lower()
         assert "french" in prompt.lower() or "fr" in prompt.lower()
-        
+
         # Test language parameter
         prompt = handler._create_system_prompt(language="de")
-        assert "german" in prompt.lower() or "de" in prompt.lower() or "respond in" in prompt.lower()
+        assert (
+            "german" in prompt.lower()
+            or "de" in prompt.lower()
+            or "respond in" in prompt.lower()
+        )

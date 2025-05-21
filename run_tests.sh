@@ -13,7 +13,7 @@ if [ ! -d "$VENV_DIR" ]; then
 else
     # Activate virtual environment
     source "$VENV_DIR/bin/activate"
-    
+
     # Ensure all dependencies are up-to-date
     echo "Updating dependencies..."
     pip install -r requirements-dev.txt

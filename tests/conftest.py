@@ -11,9 +11,7 @@ from flask import Flask
 from flask.testing import FlaskClient
 
 from app import create_app
-from core.config import Settings, EnvironmentType
-
-from app import create_app
+from core.config import EnvironmentType, Settings
 
 
 @pytest.fixture

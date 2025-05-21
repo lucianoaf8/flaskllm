@@ -2,14 +2,15 @@
 """
 Middleware for the application.
 """
-from typing import Any
-from flask import Flask, request, g, current_app
 import time
+from typing import Any
+
+from flask import Flask, current_app, g, request
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from utils.rate_limiter import configure_rate_limiting
 from core.config import get_settings
+from utils.rate_limiter import configure_rate_limiting
 
 
 def setup_middleware(app: Flask) -> None:
@@ -86,9 +87,9 @@ def _setup_request_logging(app: Flask) -> None:
                 "status": response.status_code,
                 "duration_ms": duration,
                 "ip": request.remote_addr,
-                "user_agent": request.user_agent.string
-                if request.user_agent
-                else "Unknown",
+                "user_agent": (
+                    request.user_agent.string if request.user_agent else "Unknown"
+                ),
             }
 
             # Log differently based on status code
@@ -123,9 +124,9 @@ def _setup_security_headers(app: Flask) -> None:
         response.headers["X-XSS-Protection"] = "1; mode=block"
 
         # Set strict transport security
-        response.headers[
-            "Strict-Transport-Security"
-        ] = "max-age=31536000; includeSubDomains"
+        response.headers["Strict-Transport-Security"] = (
+            "max-age=31536000; includeSubDomains"
+        )
 
         # Content security policy
         response.headers["Content-Security-Policy"] = "default-src 'self'"

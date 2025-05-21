@@ -9,7 +9,7 @@ import os
 import re
 from typing import Any, Dict, List
 
-from flaskllm.core.logging import get_logger
+from core.logging import get_logger
 
 # Configure logger
 logger = get_logger(__name__)

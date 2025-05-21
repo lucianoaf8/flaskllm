@@ -5,11 +5,11 @@ LLM Factory Module
 This module implements the factory pattern for creating LLM handlers
 based on the configured provider.
 """
-from typing import Protocol, runtime_checkable, Optional
+from typing import Optional, Protocol, runtime_checkable
 
-from flaskllm.core.config import LLMProvider, Settings
-from flaskllm.core.exceptions import LLMAPIError
-from flaskllm.core.logging import get_logger
+from core.config import LLMProvider, Settings
+from core.exceptions import LLMAPIError
+from core.logging import get_logger
 
 # Configure logger
 logger = get_logger(__name__)
@@ -57,7 +57,7 @@ def get_llm_handler(settings: Settings) -> LLMHandler:
     provider = settings.llm_provider
 
     if provider == LLMProvider.OPENAI:
-        from flaskllm.llm.openai_handler import OpenAIHandler
+        from llm.openai_handler import OpenAIHandler
 
         if not settings.openai_api_key:
             raise LLMAPIError("OpenAI API key is not configured")
@@ -71,7 +71,7 @@ def get_llm_handler(settings: Settings) -> LLMHandler:
         return handler
 
     elif provider == LLMProvider.ANTHROPIC:
-        from flaskllm.llm.anthropic_handler import AnthropicHandler
+        from llm.anthropic_handler import AnthropicHandler
 
         if not settings.anthropic_api_key:
             raise LLMAPIError("Anthropic API key is not configured")

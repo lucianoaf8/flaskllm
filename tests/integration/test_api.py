@@ -2,12 +2,13 @@
 """
 Integration tests for the API.
 """
-import pytest
 import json
 from unittest.mock import patch
 
+import pytest
+
 from app import create_app
-from core.config import Settings, EnvironmentType
+from core.config import EnvironmentType, Settings
 
 
 @pytest.fixture

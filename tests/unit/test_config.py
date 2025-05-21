@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from flaskllm.core.config import Settings, EnvironmentType, LLMProvider
+from core.config import EnvironmentType, LLMProvider, Settings
 
 
 def test_default_settings():

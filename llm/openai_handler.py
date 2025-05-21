@@ -15,9 +15,9 @@ from tenacity import (
     wait_exponential,
 )
 
-from flaskllm.api.v1.schemas import PromptSource, PromptType
-from flaskllm.core.exceptions import LLMAPIError
-from flaskllm.core.logging import get_logger
+from api.v1.schemas import PromptSource, PromptType
+from core.exceptions import LLMAPIError
+from core.logging import get_logger
 
 # Configure logger
 logger = get_logger(__name__)
