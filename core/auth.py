@@ -11,8 +11,8 @@ from typing import Any, Callable, Optional, TypeVar, cast
 
 from flask import current_app, g, request
 
-from flaskllm.core.exceptions import AuthenticationError
-from flaskllm.core.logging import get_logger
+from core.exceptions import AuthenticationError
+from core.logging import get_logger
 
 # Configure logger
 logger = get_logger(__name__)
