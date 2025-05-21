@@ -5,15 +5,14 @@ API Routes Module
 This module defines the routes for the API endpoints.
 """
 import time
-from typing import Any, Dict
 
 from flask import Blueprint, Response, current_app, jsonify, request
 
-from flaskllm.api.v1.schemas import PromptRequest, validate_request
-from flaskllm.core.auth import auth_required
-from flaskllm.core.exceptions import InvalidInputError
-from flaskllm.core.logging import get_logger
-from flaskllm.llm.factory import get_llm_handler
+from api.v1.schemas import PromptRequest, validate_request
+from core.auth import auth_required
+from core.exceptions import InvalidInputError
+from core.logging import get_logger
+from llm.factory import get_llm_handler
 
 # Configure logger
 logger = get_logger(__name__)

@@ -4,10 +4,11 @@ Anthropic Handler Module
 
 This module implements the LLM handler for Anthropic's Claude API.
 """
-from typing import Optional
+from typing import Optional, cast
 
 import anthropic
 from anthropic import Anthropic
+from anthropic.types import ContentBlock
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -15,9 +16,9 @@ from tenacity import (
     wait_exponential,
 )
 
-from flaskllm.api.v1.schemas import PromptSource, PromptType
-from flaskllm.core.exceptions import LLMAPIError
-from flaskllm.core.logging import get_logger
+from api.v1.schemas import PromptSource, PromptType
+from core.exceptions import LLMAPIError
+from core.logging import get_logger
 
 # Configure logger
 logger = get_logger(__name__)
@@ -92,10 +93,19 @@ class AnthropicHandler:
             )
 
             # Extract and return the response content
-            if not response.content or not response.content[0].text:
+            if not response.content:
                 raise LLMAPIError("Empty response from Anthropic API")
-
-            return response.content[0].text
+            
+            # Get the first content block
+            content_block = response.content[0]
+            
+            # Check if it's a text block and has text content
+            if content_block.type != "text" or not content_block.text:
+                raise LLMAPIError("Invalid or empty response from Anthropic API")
+                
+            # Text is now guaranteed to be a string
+            result = cast(str, content_block.text)
+            return result
 
         except anthropic.AuthenticationError as e:
             logger.error("Anthropic authentication error", error=str(e))
@@ -181,10 +191,7 @@ class AnthropicHandler:
         elif type == PromptType.TRANSLATION:
             target_lang = language or "English"
             system_prompt += (
-                " Translate the content into "
-                + target_lang
-                + ". "
-                + "Maintain the original meaning and tone as much as possible."
+                f" Translate the content into {target_lang}. "
                 "Maintain the original meaning and tone as much as possible."
             )
 
