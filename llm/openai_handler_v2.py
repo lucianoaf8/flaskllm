@@ -5,7 +5,7 @@ OpenAI Handler Module V2
 This module implements a more robust LLM handler for OpenAI's API with comprehensive
 error handling for v1.x of the OpenAI Python library.
 """
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
 
 import openai
 from openai import OpenAI
@@ -40,7 +40,7 @@ class OpenAIHandlerV2:
         self.api_key = api_key
         self.model = model
         self.timeout = timeout
-        
+
         # Initialize OpenAI client with better error handling
         try:
             self.client = OpenAI(
@@ -101,7 +101,7 @@ class OpenAIHandlerV2:
                     "source": source,
                     "language": language,
                     "type": type,
-                }
+                },
             )
 
             # Send request to OpenAI with proper error handling
@@ -116,12 +116,12 @@ class OpenAIHandlerV2:
             if not response.choices or len(response.choices) == 0:
                 logger.error("Empty response from OpenAI API")
                 raise LLMAPIError("Empty response from OpenAI API")
-            
+
             message = response.choices[0].message
             if not message or not message.content:
                 logger.error("Empty message content from OpenAI API")
                 raise LLMAPIError("Empty message content from OpenAI API")
-            
+
             logger.info("Successfully received response from OpenAI API")
             return message.content
 
@@ -132,19 +132,19 @@ class OpenAIHandlerV2:
         except openai.RateLimitError as e:
             logger.error(f"OpenAI rate limit exceeded: {str(e)}")
             raise LLMAPIError(f"Rate limit exceeded with OpenAI API: {str(e)}")
-            
+
         except openai.BadRequestError as e:
             logger.error(f"Bad request to OpenAI API: {str(e)}")
             raise LLMAPIError(f"Bad request to OpenAI API: {str(e)}")
-            
+
         except openai.APIConnectionError as e:
             logger.error(f"Connection error with OpenAI API: {str(e)}")
             raise LLMAPIError(f"Connection error with OpenAI API: {str(e)}")
-            
+
         except openai.APITimeoutError as e:
             logger.error(f"Timeout error with OpenAI API: {str(e)}")
             raise LLMAPIError(f"Timeout error with OpenAI API: {str(e)}")
-            
+
         except openai.APIError as e:
             logger.error(f"OpenAI API error: {str(e)}")
             raise LLMAPIError(f"Error from OpenAI API: {str(e)}")

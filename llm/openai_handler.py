@@ -7,7 +7,13 @@ This module implements the LLM handler for OpenAI's API.
 from typing import Dict, List, Optional
 
 import openai
-from openai import OpenAI, APIError, APIConnectionError, RateLimitError, AuthenticationError
+from openai import (
+    APIConnectionError,
+    APIError,
+    AuthenticationError,
+    OpenAI,
+    RateLimitError,
+)
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -41,9 +47,7 @@ class OpenAIHandler:
         self.client = OpenAI(api_key=api_key, timeout=timeout)
 
     @retry(
-        retry=retry_if_exception_type(
-            (APIError, APIConnectionError, RateLimitError)
-        ),
+        retry=retry_if_exception_type((APIError, APIConnectionError, RateLimitError)),
         wait=wait_exponential(multiplier=1, min=2, max=30),
         stop=stop_after_attempt(3),
     )

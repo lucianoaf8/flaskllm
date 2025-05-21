@@ -60,11 +60,13 @@ def get_llm_handler(settings: Settings) -> LLMHandler:
         try:
             # Try using the Direct handler first - this avoids all client initialization issues
             from llm.openai_direct import OpenAIDirectHandler
-            
+
             if not settings.openai_api_key:
                 raise LLMAPIError("OpenAI API key is not configured")
-                
-            logger.info("Initializing OpenAI Direct handler", model=settings.openai_model)
+
+            logger.info(
+                "Initializing OpenAI Direct handler", model=settings.openai_model
+            )
             handler: LLMHandler = OpenAIDirectHandler(
                 api_key=settings.openai_api_key,
                 model=settings.openai_model,
@@ -73,15 +75,17 @@ def get_llm_handler(settings: Settings) -> LLMHandler:
             return handler
         except Exception as e:
             logger.warning(f"Failed to initialize OpenAI Direct handler: {str(e)}")
-            
+
             try:
                 # Fall back to V2 handler
                 from llm.openai_handler_v2 import OpenAIHandlerV2
-                
+
                 if not settings.openai_api_key:
                     raise LLMAPIError("OpenAI API key is not configured")
-                    
-                logger.info("Initializing OpenAI handler V2", model=settings.openai_model)
+
+                logger.info(
+                    "Initializing OpenAI handler V2", model=settings.openai_model
+                )
                 handler: LLMHandler = OpenAIHandlerV2(
                     api_key=settings.openai_api_key,
                     model=settings.openai_model,
@@ -90,13 +94,13 @@ def get_llm_handler(settings: Settings) -> LLMHandler:
                 return handler
             except Exception as e:
                 logger.warning(f"Failed to initialize OpenAI V2 handler: {str(e)}")
-                
+
                 # Fall back to the standard handler
                 from llm.openai_handler import OpenAIHandler
-                
+
                 if not settings.openai_api_key:
                     raise LLMAPIError("OpenAI API key is not configured")
-                    
+
                 logger.info("Initializing OpenAI handler", model=settings.openai_model)
                 handler: LLMHandler = OpenAIHandler(
                     api_key=settings.openai_api_key,

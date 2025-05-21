@@ -5,9 +5,10 @@ OpenAI Direct Handler
 This module implements a direct OpenAI API handler without using the client
 initialization that causes the proxies error.
 """
-from typing import Dict, List, Optional, Any
-import os
 import json
+import os
+from typing import Any, Dict, List, Optional
+
 import requests
 from tenacity import retry, stop_after_attempt, wait_exponential
 
@@ -18,28 +19,28 @@ from core.logging import get_logger
 # Configure logger
 logger = get_logger(__name__)
 
+
 class OpenAIDirectHandler:
     """
     Direct handler for OpenAI API without using their client library initialization.
     Avoids the 'proxies' parameter error.
     """
-    
+
     def __init__(self, api_key: str, model: str = "gpt-4", timeout: int = 30):
         """Initialize the handler with API credentials and settings."""
         self.api_key = api_key
         self.model = model
         self.timeout = timeout
         self.api_url = "https://api.openai.com/v1/chat/completions"
-        
+
         # Validate the API key is present
         if not api_key:
             raise LLMAPIError("OpenAI API key is required")
-            
+
         logger.info(f"Initialized Direct OpenAI handler with model {model}")
-            
+
     @retry(
-        wait=wait_exponential(multiplier=1, min=2, max=30),
-        stop=stop_after_attempt(3)
+        wait=wait_exponential(multiplier=1, min=2, max=30), stop=stop_after_attempt(3)
     )
     def process_prompt(
         self,
@@ -52,7 +53,7 @@ class OpenAIDirectHandler:
         try:
             # Create messages for the API
             messages = self._create_messages(prompt, source, language, type)
-            
+
             # Log the request (without full prompt for privacy)
             logger.info(
                 "Sending request to OpenAI API",
@@ -61,78 +62,79 @@ class OpenAIDirectHandler:
                     "prompt_length": len(prompt),
                     "source": source,
                     "language": language,
-                    "type": type
-                }
+                    "type": type,
+                },
             )
-            
+
             # Prepare the request payload
             payload = {
                 "model": self.model,
                 "messages": messages,
                 "temperature": 0.3,
-                "max_tokens": 1024
+                "max_tokens": 1024,
             }
-            
+
             # Set up headers with authentication
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             }
-            
+
             # Make the request directly using requests library
             response = requests.post(
-                self.api_url,
-                headers=headers,
-                json=payload,
-                timeout=self.timeout
+                self.api_url, headers=headers, json=payload, timeout=self.timeout
             )
-            
+
             # Check for HTTP errors
             response.raise_for_status()
-            
+
             # Parse the response
             response_data = response.json()
-            
+
             # Validate the response has the expected structure
             if not response_data.get("choices") or len(response_data["choices"]) == 0:
                 raise LLMAPIError("Empty response from OpenAI API")
-                
+
             # Get the message content
             message = response_data["choices"][0].get("message", {})
             content = message.get("content", "")
-            
+
             if not content:
                 raise LLMAPIError("Empty message content from OpenAI API")
-                
+
             return content
-            
+
         except requests.exceptions.HTTPError as e:
             status_code = e.response.status_code if e.response else 0
             error_detail = ""
-            
+
             try:
                 error_data = e.response.json()
                 error_detail = error_data.get("error", {}).get("message", str(e))
             except:
                 error_detail = str(e)
-                
+
             logger.error(f"HTTP error from OpenAI API: {status_code} - {error_detail}")
-            
+
             if status_code == 401:
-                raise LLMAPIError(f"Authentication error with OpenAI API: {error_detail}")
+                raise LLMAPIError(
+                    f"Authentication error with OpenAI API: {error_detail}"
+                )
             elif status_code == 429:
-                raise LLMAPIError(f"Rate limit exceeded with OpenAI API: {error_detail}")
+                raise LLMAPIError(
+                    f"Rate limit exceeded with OpenAI API: {error_detail}"
+                )
             else:
                 raise LLMAPIError(f"Error from OpenAI API: {error_detail}")
-                
+
         except requests.exceptions.Timeout:
             logger.error("Request to OpenAI API timed out")
             raise LLMAPIError("Request to OpenAI API timed out")
-            
+
         except requests.exceptions.ConnectionError as e:
             logger.error(f"Connection error with OpenAI API: {str(e)}")
             raise LLMAPIError(f"Connection error with OpenAI API: {str(e)}")
-            
+
         except Exception as e:
             logger.exception(f"Unexpected error with OpenAI API: {str(e)}")
             raise LLMAPIError(f"Unexpected error: {str(e)}")

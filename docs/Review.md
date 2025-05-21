@@ -2,7 +2,7 @@
 created: 2025-05-21T01:18:45 (UTC -06:00)
 tags: []
 source: https://claude.ai/chat/f9f8d1e9-9a0f-413b-8441-3c1dcb25438f
-author: 
+author:
 ---
 
 # Review Task List for Next Phase of Flask LLM API - Claude
@@ -80,15 +80,15 @@ class UserSettings(BaseModel):
     favorite_templates: List[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-    
+
     def get_preference(self, key: str, default: Any = None) -> Any:
         """
         Get a preference value.
-        
+
         Args:
             key: Preference key
             default: Default value if not found
-            
+
         Returns:
             Preference value or default
         """
@@ -96,11 +96,11 @@ class UserSettings(BaseModel):
             if pref.key == key:
                 return pref.value
         return default
-    
+
     def set_preference(self, key: str, value: Any, category: Optional[str] = None) -> None:
         """
         Set a preference value.
-        
+
         Args:
             key: Preference key
             value: Preference value
@@ -114,18 +114,18 @@ class UserSettings(BaseModel):
                     pref.category = category
                 self.updated_at = datetime.utcnow()
                 return
-        
+
         # Add new preference
         self.preferences.append(Preference(key=key, value=value, category=category))
         self.updated_at = datetime.utcnow()
-    
+
     def delete_preference(self, key: str) -> bool:
         """
         Delete a preference.
-        
+
         Args:
             key: Preference key
-            
+
         Returns:
             True if deleted, False if not found
         """
@@ -155,32 +155,32 @@ logger = get_logger(__name__)
 class UserSettingsStorage:
     """
     Storage for user settings.
-    
+
     Supports in-memory storage and file-based persistence.
     """
-    
+
     def __init__(self, storage_dir: Optional[str] = None):
         """
         Initialize the user settings storage.
-        
+
         Args:
             storage_dir: Directory for file-based storage
         """
         self.settings: Dict[str, UserSettings] = {}
         self.storage_dir = storage_dir
-        
+
         # Create storage directory if it doesn't exist
         if storage_dir and not os.path.exists(storage_dir):
             os.makedirs(storage_dir)
             logger.info(f"Created user settings storage directory: {storage_dir}")
-    
+
     def get_settings(self, user_id: str) -> UserSettings:
         """
         Get settings for a user.
-        
+
         Args:
             user_id: User ID
-            
+
         Returns:
             User settings
         """
@@ -195,81 +195,81 @@ class UserSettingsStorage:
             else:
                 # Create new settings
                 self.settings[user_id] = UserSettings(user_id=user_id)
-        
+
         return self.settings[user_id]
-    
+
     def save_settings(self, settings: UserSettings) -> None:
         """
         Save settings for a user.
-        
+
         Args:
             settings: User settings
         """
         # Update in memory
         self.settings[settings.user_id] = settings
-        
+
         # Save to file
         self._save_settings(settings)
-    
+
     def _save_settings(self, settings: UserSettings) -> None:
         """
         Save settings to file.
-        
+
         Args:
             settings: User settings
         """
         if not self.storage_dir:
             return
-        
+
         file_path = os.path.join(self.storage_dir, f"{settings.user_id}.json")
-        
+
         try:
             # Convert to JSON-serializable dict
             data = settings.dict()
-            
+
             # Convert datetime objects to strings
             data['created_at'] = data['created_at'].isoformat()
             data['updated_at'] = data['updated_at'].isoformat()
-            
+
             # Write to file
             with open(file_path, 'w') as f:
                 json.dump(data, f)
-            
+
             logger.debug(f"Saved settings for user {settings.user_id}")
         except Exception as e:
             logger.error(f"Error saving settings for user {settings.user_id}: {str(e)}")
-    
+
     def _load_settings(self, user_id: str) -> None:
         """
         Load settings from file.
-        
+
         Args:
             user_id: User ID
-            
+
         Raises:
             FileNotFoundError: If the settings file is not found
         """
         if not self.storage_dir:
             raise FileNotFoundError(f"Storage directory not configured")
-        
+
         file_path = os.path.join(self.storage_dir, f"{user_id}.json")
-        
+
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Settings file not found: {file_path}")
-        
+
         try:
             # Read from file
             with open(file_path, 'r') as f:
                 data = json.load(f)
-            
+
             # Convert string timestamps to datetime
             data['created_at'] = datetime.fromisoformat(data['created_at'])
             data['updated_at'] = datetime.fromisoformat(data['updated_at'])
-            
+
             # Create settings
             settings = UserSettings(**data)
             self.settings[user_id] = settings
-            
+
             logger.debug(f"Loaded settings for user {user_id}")
         except Exception as e:
             logger.error(f"Error loading settings for user {user_id}: {str(e)}")
@@ -295,13 +295,13 @@ user_settings_storage = UserSettingsStorage(
 def get_user_settings():
     """
     Get settings for the user.
-    
+
     Returns:
         User settings
     """
     user_id = request.headers.get('X-API-Token')
     settings = user_settings_storage.get_settings(user_id)
-    
+
     return jsonify({
         'settings': {
             'llm_settings': settings.llm_settings.dict(),
@@ -316,21 +316,21 @@ def get_user_settings():
 def update_llm_settings():
     """
     Update LLM settings for the user.
-    
+
     Returns:
         Updated LLM settings
     """
     user_id = request.headers.get('X-API-Token')
     settings = user_settings_storage.get_settings(user_id)
-    
+
     # Update LLM settings
     llm_settings_data = request.json
     settings.llm_settings = LLMSettings(**llm_settings_data)
     settings.updated_at = datetime.utcnow()
-    
+
     # Save settings
     user_settings_storage.save_settings(settings)
-    
+
     return jsonify({
         'llm_settings': settings.llm_settings.dict()
     })
@@ -340,21 +340,21 @@ def update_llm_settings():
 def update_ui_settings():
     """
     Update UI settings for the user.
-    
+
     Returns:
         Updated UI settings
     """
     user_id = request.headers.get('X-API-Token')
     settings = user_settings_storage.get_settings(user_id)
-    
+
     # Update UI settings
     ui_settings_data = request.json
     settings.ui_settings = UISettings(**ui_settings_data)
     settings.updated_at = datetime.utcnow()
-    
+
     # Save settings
     user_settings_storage.save_settings(settings)
-    
+
     return jsonify({
         'ui_settings': settings.ui_settings.dict()
     })
@@ -364,31 +364,31 @@ def update_ui_settings():
 def update_preference():
     """
     Set a preference for the user.
-    
+
     Returns:
         Updated preference
     """
     user_id = request.headers.get('X-API-Token')
     settings = user_settings_storage.get_settings(user_id)
-    
+
     # Get preference data
     key = request.json.get('key')
     value = request.json.get('value')
     category = request.json.get('category')
-    
+
     if not key:
         return jsonify({
             'error': 'Invalid request',
             'details': 'Preference key is required',
             'code': 'INVALID_REQUEST'
         }), 400
-    
+
     # Set preference
     settings.set_preference(key, value, category)
-    
+
     # Save settings
     user_settings_storage.save_settings(settings)
-    
+
     return jsonify({
         'preference': {
             'key': key,
@@ -402,16 +402,16 @@ def update_preference():
 def delete_preference(key):
     """
     Delete a preference for the user.
-    
+
     Returns:
         Success message
     """
     user_id = request.headers.get('X-API-Token')
     settings = user_settings_storage.get_settings(user_id)
-    
+
     # Delete preference
     success = settings.delete_preference(key)
-    
+
     # Save settings
     if success:
         user_settings_storage.save_settings(settings)
@@ -430,23 +430,23 @@ def delete_preference(key):
 def update_favorite_templates():
     """
     Update favorite templates for the user.
-    
+
     Returns:
         Updated favorite templates
     """
     user_id = request.headers.get('X-API-Token')
     settings = user_settings_storage.get_settings(user_id)
-    
+
     # Get template IDs
     template_ids = request.json.get('template_ids', [])
-    
+
     # Update favorite templates
     settings.favorite_templates = template_ids
     settings.updated_at = datetime.utcnow()
-    
+
     # Save settings
     user_settings_storage.save_settings(settings)
-    
+
     return jsonify({
         'favorite_templates': settings.favorite_templates
     })
@@ -456,21 +456,21 @@ def update_favorite_templates():
 def add_favorite_template(template_id):
     """
     Add a template to favorites.
-    
+
     Returns:
         Updated favorite templates
     """
     user_id = request.headers.get('X-API-Token')
     settings = user_settings_storage.get_settings(user_id)
-    
+
     # Add to favorites if not already there
     if template_id not in settings.favorite_templates:
         settings.favorite_templates.append(template_id)
         settings.updated_at = datetime.utcnow()
-        
+
         # Save settings
         user_settings_storage.save_settings(settings)
-    
+
     return jsonify({
         'favorite_templates': settings.favorite_templates
     })
@@ -480,21 +480,21 @@ def add_favorite_template(template_id):
 def remove_favorite_template(template_id):
     """
     Remove a template from favorites.
-    
+
     Returns:
         Updated favorite templates
     """
     user_id = request.headers.get('X-API-Token')
     settings = user_settings_storage.get_settings(user_id)
-    
+
     # Remove from favorites
     if template_id in settings.favorite_templates:
         settings.favorite_templates.remove(template_id)
         settings.updated_at = datetime.utcnow()
-        
+
         # Save settings
         user_settings_storage.save_settings(settings)
-    
+
     return jsonify({
         'favorite_templates': settings.favorite_templates
     })
@@ -506,7 +506,7 @@ def remove_favorite_template(template_id):
 python# core/config.py (additions)
 class Settings(BaseSettings):
     """Application settings."""
-    
+
     # Add new settings
     max_file_size_mb: int = Field(
         default=10, description="Maximum file size in MB"
@@ -731,7 +731,7 @@ eventSource.onmessage = (event) => {
     console.log('Full response:', fullResponse);
     return;
   }
-  
+
   const data = JSON.parse(event.data);
   if (data.chunk) {
     fullResponse += data.chunk;
@@ -1067,7 +1067,7 @@ from llm.template_storage import TemplateStorage
 
 class TestPromptTemplate:
     """Test the PromptTemplate class."""
-    
+
     def test_render_template(self):
         """Test rendering a template with variables."""
         # Create a template
@@ -1081,33 +1081,33 @@ class TestPromptTemplate:
                 TemplateVariable(name="age", description="Your age", required=False, default="30")
             ]
         )
-        
+
         # Render with all variables
         rendered = template.render({"name": "John", "age": "25"})
         assert rendered == "Hello, John! You are 25 years old."
-        
+
         # Render with only required variables
         rendered = template.render({"name": "Alice"})
         assert rendered == "Hello, Alice! You are 30 years old."
-        
+
         # Test missing required variable
         with pytest.raises(Exception):
             template.render({})
 
 class TestTemplateStorage:
     """Test the TemplateStorage class."""
-    
+
     @pytest.fixture
     def temp_dir(self):
         """Create a temporary directory for templates."""
         with tempfile.TemporaryDirectory() as tmpdirname:
             yield tmpdirname
-    
+
     @pytest.fixture
     def template_storage(self, temp_dir):
         """Create a template storage instance."""
         return TemplateStorage(templates_dir=temp_dir)
-    
+
     def test_add_template(self, template_storage):
         """Test adding a template."""
         # Create a template
@@ -1120,14 +1120,14 @@ class TestTemplateStorage:
                 TemplateVariable(name="name", description="Your name", required=True)
             ]
         )
-        
+
         # Add template
         template_storage.add_template(template)
-        
+
         # Verify template was added
         assert "test_template" in template_storage.templates
         assert template_storage.templates["test_template"].name == "Test Template"
-    
+
     def test_get_template(self, template_storage):
         """Test getting a template."""
         # Add a template
@@ -1141,9 +1141,9 @@ class TestTemplateStorage:
             ]
         )
         template_storage.add_template(template)
-        
+
         # Get template
         retrieved = template_storage.get_template("test_template")
-        
+
         # Verify template
 ```
