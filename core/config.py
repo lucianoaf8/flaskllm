@@ -120,7 +120,15 @@ class Settings(BaseSettings):
         description="SQLAlchemy URL for MySQL cache (e.g. mysql+pymysql://user:pass@host/db/db)"
     )
 
-
+    # Token management settings
+    token_db_path: str = Field(
+        default="data/tokens.db", 
+        description="Path to token database"
+    )
+    token_encryption_key: Optional[str] = Field(
+        default=None, 
+        description="Encryption key for token storage"
+    )
 
 
     @validator("allowed_origins", pre=True)
