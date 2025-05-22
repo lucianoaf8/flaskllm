@@ -9,8 +9,8 @@ from typing import Any, Dict, Optional
 
 from flask import current_app, jsonify, request
 
-# We'll import error codes when we add support for them in exceptions
-from core.error_codes import ErrorCode
+# Import error codes dynamically to avoid circular imports
+# The ErrorCode enum will be imported when needed
 
 
 class APIError(Exception):
@@ -18,11 +18,16 @@ class APIError(Exception):
 
     status_code = 500
     message = "An unknown error occurred"
-    error_code = ErrorCode.INTERNAL_SERVER_ERROR
+    
+    @property
+    def error_code(self):
+        # Import ErrorCode dynamically to avoid circular imports
+        from core.error_codes import ErrorCode
+        return ErrorCode.INTERNAL_SERVER_ERROR
 
     def __init__(
         self, message: Optional[str] = None, status_code: Optional[int] = None, 
-        error_code: Optional[ErrorCode] = None
+        error_code: Optional[str] = None
     ):
         """
         Initialize API error.
@@ -60,7 +65,12 @@ class AuthenticationError(APIError):
 
     status_code = 401
     message = "Authentication failed"
-    error_code = ErrorCode.INVALID_TOKEN
+    
+    @property
+    def error_code(self):
+        # Import ErrorCode dynamically to avoid circular imports
+        from core.error_codes import ErrorCode
+        return ErrorCode.INVALID_TOKEN
 
 
 # ---- Validation Errors -----
@@ -70,7 +80,12 @@ class ValidationError(APIError):
 
     status_code = 400
     message = "Validation failed"
-    error_code = ErrorCode.INVALID_REQUEST_FORMAT
+    
+    @property
+    def error_code(self):
+        # Import ErrorCode dynamically to avoid circular imports
+        from core.error_codes import ErrorCode
+        return ErrorCode.INVALID_REQUEST_FORMAT
 
 
 class InvalidInputError(APIError):
@@ -78,7 +93,11 @@ class InvalidInputError(APIError):
 
     status_code = 400
     message = "Invalid input data"
-    error_code = ErrorCode.INVALID_FIELD_VALUE
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.INVALID_FIELD_VALUE
 
 
 # ---- Rate Limiting Errors -----
@@ -88,7 +107,15 @@ class RateLimitExceeded(APIError):
 
     status_code = 429
     message = "Rate limit exceeded"
-    error_code = ErrorCode.RATE_LIMIT_EXCEEDED
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.RATE_LIMIT_EXCEEDED
+
+
+# Alias for backward compatibility with tests
+RateLimitExceededError = RateLimitExceeded
 
 
 # ---- External Service Errors -----
@@ -98,7 +125,11 @@ class LLMAPIError(APIError):
 
     status_code = 502
     message = "LLM API error"
-    error_code = ErrorCode.LLM_API_ERROR
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.LLM_API_ERROR
 
 
 # DEPRECATED: Use the functionality in error_handler.py instead
@@ -124,6 +155,7 @@ def setup_error_handlers(app: Any) -> None:
     def handle_not_found(error: Any) -> tuple[Dict[str, Any], int]:
         """Handle 404 errors."""
         current_app.logger.info(f"Route not found: {request.path}")
+        from core.error_codes import ErrorCode
         return jsonify({"error": "Resource not found", "code": ErrorCode.RESOURCE_NOT_FOUND}), 404
 
     @app.errorhandler(405)
@@ -136,15 +168,21 @@ def setup_error_handlers(app: Any) -> None:
     def handle_server_error(error: Any) -> tuple[Dict[str, Any], int]:
         """Handle 500 errors."""
         current_app.logger.exception("Unexpected server error")
+        from core.error_codes import ErrorCode
         return jsonify({"error": "Internal server error", "code": ErrorCode.INTERNAL_SERVER_ERROR}), 500
 
 # ---- Infrastructure Errors -----
 
 class CacheError(APIError):
     """Cache layer failure."""
+
     status_code = 500
     message = "Cache error"
-    error_code = ErrorCode.CACHE_UNAVAILABLE
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.CACHE_UNAVAILABLE
 
 
 # ---- Feature-specific Errors -----
@@ -154,7 +192,11 @@ class TemplateError(APIError):
 
     status_code = 400
     message = "Template operation failed"
-    error_code = ErrorCode.INVALID_FIELD_VALUE
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.INVALID_FIELD_VALUE
 
 
 class ConversationError(APIError):
@@ -162,7 +204,11 @@ class ConversationError(APIError):
 
     status_code = 400
     message = "Conversation operation failed"
-    error_code = ErrorCode.INVALID_FIELD_VALUE
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.INVALID_FIELD_VALUE
 
 
 class FileProcessingError(APIError):
@@ -170,7 +216,11 @@ class FileProcessingError(APIError):
 
     status_code = 400
     message = "File processing failed"
-    error_code = ErrorCode.INVALID_FIELD_VALUE
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.INVALID_FIELD_VALUE
 
 
 class SettingsError(APIError):
@@ -178,7 +228,11 @@ class SettingsError(APIError):
 
     status_code = 400
     message = "Settings operation failed"
-    error_code = ErrorCode.CONFIGURATION_ERROR
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.CONFIGURATION_ERROR
 
 
 class CalendarError(APIError):
@@ -186,4 +240,8 @@ class CalendarError(APIError):
 
     status_code = 400
     message = "Calendar operation failed"
-    error_code = ErrorCode.INVALID_FIELD_VALUE
+    
+    @property
+    def error_code(self):
+        from core.error_codes import ErrorCode
+        return ErrorCode.INVALID_FIELD_VALUE

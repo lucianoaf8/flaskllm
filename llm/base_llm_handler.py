@@ -8,11 +8,12 @@ handling of prompts, errors, and responses.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 import hashlib
 import json
 
-from api.v1.schemas import PromptSource, PromptType
+# Don't import schemas at module level to avoid circular imports
+# They will be imported in the functions that need them
 from core.exceptions import LLMAPIError
 from core.logging import get_logger
 from core.config import Settings
@@ -82,6 +83,9 @@ class BaseLLMHandler(ABC):
         Returns:
             System prompt for the LLM provider
         """
+        # Import enums here to avoid circular imports
+        from api.v1.schemas import PromptSource, PromptType
+        
         # Start with a base system prompt
         system_prompt = (
             "You are an AI assistant that helps process text content. "

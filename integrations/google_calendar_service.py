@@ -370,15 +370,7 @@ class EventMapper:
         # Extract date and time
         date_patterns = [
             # Date and time range in one line
-            r'(?:Date|Time|When):\s*([A-Za-z]+,?\s+[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4})?(?:\s+(?:from|at)\s+)?(\d{1,2}:\d{2}\s*
-
-
-
-## Response:
-```python
-        # Extract date and time
-        date_patterns = [
-            # Date and time range in one line
+            r'(?:Date|Time|When):\s*([A-Za-z]+,?\s+[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4})?(?:\s+(?:from|at)\s+)?(\d{1,2}:\d{2}\s*[AP]M)\s*(?:-|to)\s*(\d{1,2}:\d{2}\s*[AP]M)',
             r'(?:Date|Time|When):\s*([A-Za-z]+,?\s+[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4})?(?:\s+(?:from|at)\s+)?(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?)(?:\s*(?:-|to|–)\s*(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?))?',
 
             # Date followed by time

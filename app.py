@@ -13,6 +13,7 @@ from core.config import Settings, get_settings
 from core.exceptions import setup_error_handlers
 from core.logging import configure_logging
 from core.middleware import setup_middleware
+from core.auth import TokenService, TokenStorage
 
 
 def create_app(settings: Optional[Settings] = None) -> Flask:
@@ -48,6 +49,20 @@ def create_app(settings: Optional[Settings] = None) -> Flask:
 
     # Setup middleware
     setup_middleware(app)
+    
+    # Initialize token management
+    token_storage = TokenStorage(
+        db_path=settings.token_db_path,
+        encryption_key=settings.token_encryption_key
+    )
+    token_service = TokenService(token_storage)
+    
+    # Store in app config for access in routes
+    app.config["TOKEN_SERVICE"] = token_service
+    
+    # Migrate legacy token if it exists
+    if hasattr(settings, "api_token") and settings.api_token:
+        token_service.migrate_legacy_token(settings.api_token, "Migrated legacy token")
 
     # Register API blueprint
     app.register_blueprint(create_api_blueprint())

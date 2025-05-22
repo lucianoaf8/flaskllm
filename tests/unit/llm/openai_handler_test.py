@@ -1,5 +1,9 @@
+import pytest
+from unittest.mock import patch, MagicMock
+from llm.handlers.openai import OpenAIHandler
+
 # Example of properly mocking OpenAI in a test
-@patch("flaskllm.llm.openai_handler.OpenAI")
+@patch("llm.handlers.openai.OpenAI")
 def test_openai_handler_process_prompt(mock_openai):
     # Setup mock response
     mock_client = MagicMock()

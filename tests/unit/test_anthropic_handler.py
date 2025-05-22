@@ -8,7 +8,7 @@ import pytest
 
 from api.v1.schemas import PromptSource, PromptType
 from core.exceptions import LLMAPIError
-from llm.anthropic_handler import AnthropicHandler
+from llm.handlers.anthropic import AnthropicHandler
 
 
 class TestAnthropicHandler:

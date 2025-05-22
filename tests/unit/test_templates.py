@@ -6,8 +6,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from llm.template_storage import TemplateStorage
-from llm.templates import PromptTemplate, TemplateVariable
+from llm.storage.templates import TemplateStorage, PromptTemplate, TemplateVariable
 
 
 class TestPromptTemplate:

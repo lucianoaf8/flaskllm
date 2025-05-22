@@ -17,11 +17,9 @@ secrets.json
 *.secret
 *credentials*
 *api_key*
-*token*
 *secret*
 *password*
 *credential*
-*auth*
 *login*
 *private*
 .aws/

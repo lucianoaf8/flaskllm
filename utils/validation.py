@@ -368,3 +368,167 @@ def validate_list(
                 return False, f"Item at index {i} is invalid: {error_message}"
     
     return True, None
+
+
+def sanitize_string(value: str, allow_html: bool = False) -> str:
+    """
+    Sanitize a string by removing potentially harmful content.
+    
+    Args:
+        value: String to sanitize
+        allow_html: Whether to allow HTML tags
+        
+    Returns:
+        Sanitized string
+    """
+    if not isinstance(value, str):
+        return str(value)
+        
+    # Strip control characters
+    result = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', value)
+    
+    if not allow_html:
+        # Remove HTML tags if not allowed
+        result = re.sub(r'<[^>]*>', '', result)
+        
+    # Remove potential SQL injection patterns
+    result = re.sub(r'[\\;\'\"\(\)]', '', result)
+    
+    return result
+
+
+def validate_input(
+    data: Dict[str, Any],
+    schema: Dict[str, Dict[str, Any]],
+    strict: bool = True
+) -> Tuple[bool, Optional[Dict[str, str]]]:
+    """
+    Validate input data against a schema.
+    
+    Args:
+        data: Dictionary of input data to validate
+        schema: Dictionary defining validation rules for each field
+        strict: Whether to fail validation if extra fields are present
+        
+    Returns:
+        Tuple of (is_valid, errors_dict)
+    """
+    if not isinstance(data, dict):
+        return False, {"_general": "Input data must be a dictionary"}
+    
+    errors = {}
+    
+    # Check for missing required fields
+    for field_name, field_schema in schema.items():
+        # Check if field is required
+        if field_schema.get("required", False) and field_name not in data:
+            errors[field_name] = "This field is required"
+    
+    # Check for extra fields if strict mode is enabled
+    if strict:
+        extra_fields = set(data.keys()) - set(schema.keys())
+        if extra_fields:
+            errors["_extra_fields"] = f"Unexpected fields: {', '.join(extra_fields)}"
+    
+    # Validate each field
+    for field_name, field_value in data.items():
+        # Skip fields not in schema if not in strict mode
+        if field_name not in schema and not strict:
+            continue
+            
+        # Skip fields not in schema if in strict mode (already reported above)
+        if field_name not in schema:
+            continue
+        
+        field_schema = schema[field_name]
+        field_type = field_schema.get("type")
+        
+        # Validate field based on type
+        if field_type == "string":
+            is_valid, error = validate_string(
+                field_value,
+                min_length=field_schema.get("min_length"),
+                max_length=field_schema.get("max_length"),
+                pattern=field_schema.get("pattern"),
+            )
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "integer":
+            is_valid, error = validate_integer(
+                field_value,
+                min_value=field_schema.get("min_value"),
+                max_value=field_schema.get("max_value"),
+            )
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "float":
+            is_valid, error = validate_float(
+                field_value,
+                min_value=field_schema.get("min_value"),
+                max_value=field_schema.get("max_value"),
+            )
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "boolean":
+            is_valid, error = validate_boolean(field_value)
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "date":
+            is_valid, error = validate_date(
+                field_value,
+                format_str=field_schema.get("format", "%Y-%m-%d"),
+                min_date=field_schema.get("min_date"),
+                max_date=field_schema.get("max_date"),
+            )
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "email":
+            is_valid, error = validate_email(field_value)
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "url":
+            is_valid, error = validate_url(
+                field_value,
+                required_schemes=field_schema.get("required_schemes"),
+            )
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "ip_address":
+            is_valid, error = validate_ip_address(field_value)
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "list":
+            is_valid, error = validate_list(
+                field_value,
+                min_length=field_schema.get("min_length"),
+                max_length=field_schema.get("max_length"),
+            )
+            if not is_valid:
+                errors[field_name] = error
+                
+        elif field_type == "dict":
+            is_valid, error = validate_dict(
+                field_value,
+                required_keys=field_schema.get("required_keys"),
+                optional_keys=field_schema.get("optional_keys"),
+                allow_extra_keys=field_schema.get("allow_extra_keys", False),
+            )
+            if not is_valid:
+                errors[field_name] = error
+        
+        # Custom validation function
+        custom_validator = field_schema.get("validator")
+        if custom_validator and callable(custom_validator):
+            is_valid, error = custom_validator(field_value)
+            if not is_valid:
+                errors[field_name] = error
+    
+    return len(errors) == 0, errors or None

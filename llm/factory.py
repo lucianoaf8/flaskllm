@@ -6,7 +6,7 @@ This module implements the factory pattern for creating LLM handlers
 based on the configured provider. It provides a centralized way to
 instantiate the appropriate LLM handler based on application settings.
 """
-from typing import Optional, Type, Dict, Any
+from typing import Protocol, runtime_checkable, Optional, Type, Dict, Any
 
 from core.config import LLMProvider, Settings
 from core.exceptions import LLMAPIError
@@ -38,18 +38,19 @@ def register_handler(provider: LLMProvider, handler_type: str, handler_class: Ty
 
 
 # Import handlers and register them
-from .openai_handler import OpenAIHandler
-from .openai_handler_v2 import OpenAIHandlerV2
-from .openai_direct import OpenAIDirectHandler
-from .anthropic_handler import AnthropicHandler
+from .handlers.openai import OpenAIHandler
+from .utils.direct_clients import OpenAIDirectClient
+from .handlers.anthropic import AnthropicHandler
+from .handlers.openrouter import OpenRouterHandler
 
 # Register OpenAI handlers
 register_handler(LLMProvider.OPENAI, "standard", OpenAIHandler)
-register_handler(LLMProvider.OPENAI, "v2", OpenAIHandlerV2)
-register_handler(LLMProvider.OPENAI, "direct", OpenAIDirectHandler)
 
 # Register Anthropic handlers
 register_handler(LLMProvider.ANTHROPIC, "standard", AnthropicHandler)
+
+# Register OpenRouter handlers
+register_handler(LLMProvider.OPEN_ROUTINE, "standard", OpenRouterHandler)
 
 
 def get_llm_handler(settings: Settings) -> BaseLLMHandler:
@@ -75,6 +76,8 @@ def get_llm_handler(settings: Settings) -> BaseLLMHandler:
         handler = _get_openai_handler(settings)
     elif provider == LLMProvider.ANTHROPIC:
         handler = _get_anthropic_handler(settings)
+    elif provider == LLMProvider.OPENROUTER:
+        handler = _get_openrouter_handler(settings)
     else:
         raise LLMAPIError(f"Unsupported LLM provider: {provider}")
     
@@ -101,11 +104,13 @@ def _validate_provider_config(provider: LLMProvider, settings: Settings) -> None
         raise LLMAPIError("OpenAI API key is not configured")
     elif provider == LLMProvider.ANTHROPIC and not settings.anthropic_api_key:
         raise LLMAPIError("Anthropic API key is not configured")
+    elif provider == LLMProvider.OPENROUTER and not settings.openrouter_api_key:
+        raise LLMAPIError("OpenRouter API key is not configured")
 
 
 def _get_openai_handler(settings: Settings) -> BaseLLMHandler:
     """
-    Get an OpenAI handler with fallback logic.
+    Get an OpenAI handler.
     
     Args:
         settings: Application settings
@@ -114,36 +119,27 @@ def _get_openai_handler(settings: Settings) -> BaseLLMHandler:
         OpenAI handler instance
         
     Raises:
-        LLMAPIError: If all handler initialization attempts fail
+        LLMAPIError: If handler initialization fails
     """
-    # List of handler types to try in order of preference
-    handler_types = ["direct", "v2", "standard"]
-    exceptions = []
-    
-    for handler_type in handler_types:
-        try:
-            handler_class = _HANDLER_MAPPING[LLMProvider.OPENAI][handler_type]
-            logger.info(
-                f"Initializing {handler_class.__name__}", 
-                model=settings.openai_model
-            )
-            
-            handler = handler_class(
-                api_key=settings.openai_api_key,
-                model=settings.openai_model,
-                timeout=settings.request_timeout,
-            )
-            return handler
-        except Exception as e:
-            logger.warning(
-                f"Failed to initialize {handler_type} OpenAI handler", 
-                error=str(e)
-            )
-            exceptions.append((handler_type, str(e)))
-    
-    # If all handler initialization attempts failed, raise an error
-    error_details = "; ".join([f"{t}: {e}" for t, e in exceptions])
-    raise LLMAPIError(f"Failed to initialize any OpenAI handler: {error_details}")
+    try:
+        handler_class = _HANDLER_MAPPING[LLMProvider.OPENAI]["standard"]
+        logger.info(
+            f"Initializing {handler_class.__name__}", 
+            model=settings.openai_model
+        )
+        
+        handler = handler_class(
+            api_key=settings.openai_api_key,
+            model=settings.openai_model,
+            timeout=settings.request_timeout,
+        )
+        return handler
+    except Exception as e:
+        logger.error(
+            "Failed to initialize OpenAI handler", 
+            error=str(e)
+        )
+        raise LLMAPIError(f"Failed to initialize OpenAI handler: {str(e)}")
 
 
 def _get_anthropic_handler(settings: Settings) -> BaseLLMHandler:
@@ -165,5 +161,28 @@ def _get_anthropic_handler(settings: Settings) -> BaseLLMHandler:
     return handler_class(
         api_key=settings.anthropic_api_key,
         model=settings.anthropic_model,
+        timeout=settings.request_timeout,
+    )
+
+
+def _get_openrouter_handler(settings: Settings) -> BaseLLMHandler:
+    """
+    Get an OpenRouter handler.
+    
+    Args:
+        settings: Application settings
+        
+    Returns:
+        OpenRouter handler instance
+    """
+    handler_class = _HANDLER_MAPPING[LLMProvider.OPENROUTER]["standard"]
+    logger.info(
+        f"Initializing {handler_class.__name__}", 
+        model=settings.openrouter_model
+    )
+    
+    return handler_class(
+        api_key=settings.openrouter_api_key,
+        model=settings.openrouter_model,
         timeout=settings.request_timeout,
     )

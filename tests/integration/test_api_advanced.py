@@ -16,7 +16,7 @@ def auth_headers():
     return {"X-API-Token": "test_token", "Content-Type": "application/json"}
 
 
-@patch("llm.openai_handler.OpenAIHandler.process_prompt")
+@patch("llm.handlers.openai.OpenAIHandler.process_prompt")
 def test_webhook_with_all_parameters(mock_process_prompt, client, auth_headers):
     """Test webhook with all parameters."""
     # Setup mock

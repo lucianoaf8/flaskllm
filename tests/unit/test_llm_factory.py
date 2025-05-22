@@ -8,9 +8,9 @@ import pytest
 
 from core.config import LLMProvider, Settings
 from core.exceptions import LLMAPIError
-from llm.anthropic_handler import AnthropicHandler
+from llm.handlers.anthropic import AnthropicHandler
 from llm.factory import get_llm_handler
-from llm.openai_handler import OpenAIHandler
+from llm.handlers.openai import OpenAIHandler
 
 
 class TestLLMFactory:

@@ -9,7 +9,7 @@ import pytest
 
 from api.v1.schemas import PromptSource, PromptType
 from core.exceptions import LLMAPIError
-from llm.openai_handler import OpenAIHandler
+from llm.handlers.openai import OpenAIHandler
 
 
 class TestOpenAIHandler:

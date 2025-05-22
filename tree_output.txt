@@ -5,66 +5,55 @@
 │   │   └── ./api/docs/swagger_docs.py
 │   ├── ./api/__init__.py
 │   └── ./api/v1
-│       ├── ./api/v1/authorizations.py
-│       ├── ./api/v1/calendar_routes.py
-│       ├── ./api/v1/calendar_schemas.py
-│       ├── ./api/v1/conversation_routes.py
-│       ├── ./api/v1/conversation_routes.py_review.txt
-│       ├── ./api/v1/examples_routes.py
-│       ├── ./api/v1/file_routes.py
-│       ├── ./api/v1/file_routes.py_review.txt
-│       ├── ./api/v1/file_upload_routes.py
-│       ├── ./api/v1/google_auth.py
-│       ├── ./api/v1/health_check.py
 │       ├── ./api/v1/__init__.py
-│       ├── ./api/v1/__init__.py_review.txt
-│       ├── ./api/v1/main_routes.py
-│       ├── ./api/v1/pydantic_schemas.py
-│       ├── ./api/v1/pydantic_schemas.py_review.txt
-│       ├── ./api/v1/routes.py
-│       ├── ./api/v1/routes.py_review.txt
-│       ├── ./api/v1/routes_settings.py
-│       ├── ./api/v1/schemas.py
-│       ├── ./api/v1/schemas.py_review.txt
-│       ├── ./api/v1/streaming_routes.py
-│       ├── ./api/v1/token_routes.py
-│       ├── ./api/v1/user_settings_routes.py
-│       ├── ./api/v1/user_settings_routes.py_review.txt
-│       └── ./api/v1/validators.py
-├── ./app_incorporate.py
+│       ├── ./api/v1/middleware
+│       │   └── ./api/v1/middleware/__init__.py
+│       ├── ./api/v1/routes
+│       │   ├── ./api/v1/routes/admin.py
+│       │   ├── ./api/v1/routes/auth.py
+│       │   ├── ./api/v1/routes/calendar.py
+│       │   ├── ./api/v1/routes/conversations.py
+│       │   ├── ./api/v1/routes/core.py
+│       │   ├── ./api/v1/routes/files.py
+│       │   ├── ./api/v1/routes/__init__.py
+│       │   └── ./api/v1/routes/streaming.py
+│       └── ./api/v1/schemas
+│           ├── ./api/v1/schemas/auth.py
+│           ├── ./api/v1/schemas/calendar.py
+│           ├── ./api/v1/schemas/common.py
+│           ├── ./api/v1/schemas/conversations.py
+│           ├── ./api/v1/schemas/files.py
+│           └── ./api/v1/schemas/__init__.py
 ├── ./app.py
-├── ./audit_findings.txt
+├── ./app_startup_test.py
+├── ./audit_template.txt
+├── ./comprehensive_validation.py
 ├── ./core
-│   ├── ./core/auth.py
-│   ├── ./core/cache.py
-│   ├── ./core/cache.py_review.txt
+│   ├── ./core/auth
+│   │   ├── ./core/auth/handlers.py
+│   │   ├── ./core/auth/__init__.py
+│   │   ├── ./core/auth/storage.py
+│   │   └── ./core/auth/tokens.py
+│   ├── ./core/cache
+│   │   ├── ./core/cache/backends.py
+│   │   └── ./core/cache/__init__.py
 │   ├── ./core/config_additions.py
-│   ├── ./core/config_additions.py_review.txt
 │   ├── ./core/config.py
-│   ├── ./core/config.py_review.txt
 │   ├── ./core/constants.py
-│   ├── ./core/constants.py_review.txt
 │   ├── ./core/error_codes.py
-│   ├── ./core/error_codes.py_review.txt
-│   ├── ./core/error_handler.py
-│   ├── ./core/error_handler.py_review.txt
+│   ├── ./core/errors
+│   │   ├── ./core/errors/codes.py
+│   │   ├── ./core/errors/handlers.py
+│   │   └── ./core/errors/__init__.py
 │   ├── ./core/exceptions.py
-│   ├── ./core/exceptions.py_review.txt
 │   ├── ./core/__init__.py
-│   ├── ./core/__init__.py_review.txt
 │   ├── ./core/logging.py
-│   ├── ./core/logging.py_review.txt
 │   ├── ./core/middleware.py
-│   ├── ./core/middleware.py_review.txt
-│   ├── ./core/token_model.py
-│   ├── ./core/token_service.py
-│   ├── ./core/token_storage.py
-│   ├── ./core/user_settings.py
-│   ├── ./core/user_settings.py_review.txt
-│   ├── ./core/user_settings_storage.py
-│   ├── ./core/user_settings_storage.py_review.txt
-│   ├── ./core/xai_config.py
-│   └── ./core/xai_config.py_review.txt
+│   ├── ./core/settings
+│   │   ├── ./core/settings/__init__.py
+│   │   ├── ./core/settings/models.py
+│   │   └── ./core/settings/storage.py
+│   └── ./core/xai_config.py
 ├── ./docs
 │   ├── ./docs/architecture.md
 │   ├── ./docs/chat.md
@@ -82,27 +71,37 @@
 │   ├── ./integrations/google_calendar_service.py
 │   └── ./integrations/secure_google_token_storage.py
 ├── ./llm
-│   ├── ./llm/anthropic_handler.py
 │   ├── ./llm/base_llm_handler.py
-│   ├── ./llm/conversation_storage.py
 │   ├── ./llm/factory.py
+│   ├── ./llm/handlers
+│   │   ├── ./llm/handlers/anthropic.py
+│   │   ├── ./llm/handlers/__init__.py
+│   │   ├── ./llm/handlers/openai.py
+│   │   └── ./llm/handlers/openrouter.py
 │   ├── ./llm/__init__.py
-│   ├── ./llm/openai_direct.py
-│   ├── ./llm/openai_handler.py
-│   ├── ./llm/openai_handler_v2.py
-│   ├── ./llm/openrouter_handler.py
-│   └── ./llm/template_storage.py
-├── ./llm_directory_review.txt
+│   ├── ./llm/storage
+│   │   ├── ./llm/storage/conversations.py
+│   │   ├── ./llm/storage/__init__.py
+│   │   └── ./llm/storage/templates.py
+│   └── ./llm/utils
+│       ├── ./llm/utils/direct_clients.py
+│       └── ./llm/utils/__init__.py
+├── ./migration_checklist.txt
+├── ./migration_complete_summary.txt
 ├── ./mypy.ini
+├── ./phase1_migration_log.txt
+├── ./phase2_migration_log.txt
+├── ./phase3_migration_log.txt
+├── ./phase4_migration_log.txt
 ├── ./pytest.ini
 ├── ./README.md
 ├── ./requirements-dev.txt
 ├── ./requirements.txt
+├── ./run_tests.py
 ├── ./run_tests.sh
 ├── ./tests
 │   ├── ./tests/conftest_addition.py
 │   ├── ./tests/conftest.py
-│   ├── ./tests/fixtures
 │   ├── ./tests/integration
 │   │   ├── ./tests/integration/test_api_advanced.py
 │   │   └── ./tests/integration/test_api.py
@@ -121,16 +120,23 @@
 ├── ./toggle_git_hooks.sh
 ├── ./tools
 │   └── ./tools/token_cli.py
+├── ./tree_output.txt
 ├── ./utils
-│   ├── ./utils/config_loader.py
-│   ├── ./utils/file_processor.py
+│   ├── ./utils/config
+│   │   ├── ./utils/config/__init__.py
+│   │   └── ./utils/config/loader.py
+│   ├── ./utils/file_processing
+│   │   ├── ./utils/file_processing/__init__.py
+│   │   └── ./utils/file_processing/processor.py
 │   ├── ./utils/__init__.py
-│   ├── ./utils/logger.py
-│   ├── ./utils/prometheus_metrics.py
+│   ├── ./utils/monitoring
+│   │   ├── ./utils/monitoring/__init__.py
+│   │   ├── ./utils/monitoring/logger.py
+│   │   └── ./utils/monitoring/metrics.py
 │   ├── ./utils/rate_limiter.py
 │   ├── ./utils/security.py
 │   ├── ./utils/token_validator.py
 │   └── ./utils/validation.py
 └── ./wsgi.py
 
-15 directories, 119 files
+27 directories, 113 files

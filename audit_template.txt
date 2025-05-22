@@ -1,0 +1,60 @@
+## TEMPLATE TO FOLLOW
+
+```
+📁 Folder: [relative/path/to/folder]
+[folder description]
+
+📦 Dependencies:
+- [list dependencies]
+
+📄 Folder structure:
+- subfolder1/
+    [subfolder description]
+    - file1.py
+    - file2.py
+    - ...
+- subfolder2/
+    [subfolder description]
+    - file3.py
+    - file4.py
+    - ...
+- ...
+
+🧾 Summary of Major Issues:
+- [e.g., Circular import between X and Y]
+- [e.g., Deprecated syntax in file Z]
+- [e.g., Broken route handler in file A]
+- [e.g., Function defined but never used in file B]
+
+🔍 Detailed Findings:
+
+--- file: file1.py ---
+Purpose:
+> [Brief sentence describing what this file is meant to do]
+
+Issues Found:
+- [List specific issues]
+- [e.g., Function `x()` references undefined variable `y`]
+- [e.g., ImportError: cannot import name 'Z']
+
+Fixes Applied:
+- [Short summary of changes made]
+- [e.g., Rewrote function to handle null input]
+
+--- file: file2.py ---
+Purpose:
+> ...
+
+Issues Found:
+- ...
+
+Fixes Applied:
+- ...
+
+[Repeat for each file in the folder]
+
+📋 Further Recommendations for [folder]:
+- [Additional recommendations that apply to the entire folder]
+- [e.g., Consider splitting large module X into smaller components]
+- [e.g., Add comprehensive integration tests for this module]
+```
