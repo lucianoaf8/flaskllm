@@ -99,3 +99,36 @@ def setup_error_handlers(app: Any) -> None:
         """Handle 500 errors."""
         current_app.logger.exception("Unexpected server error")
         return jsonify({"error": "Internal server error"}), 500
+
+class CacheError(APIError):
+    """Cache layer failure."""
+    status_code = 500
+    message = "Cache error"
+
+# core/exceptions.py (additions)
+class TemplateError(APIError):
+    """Error for template operations."""
+
+    status_code = 400
+    message = "Template operation failed"
+
+
+class ConversationError(APIError):
+    """Error for conversation operations."""
+
+    status_code = 400
+    message = "Conversation operation failed"
+
+
+class FileProcessingError(APIError):
+    """Error for file processing operations."""
+
+    status_code = 400
+    message = "File processing failed"
+
+
+class SettingsError(APIError):
+    """Error for settings operations."""
+
+    status_code = 400
+    message = "Settings operation failed"

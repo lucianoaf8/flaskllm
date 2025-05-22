@@ -10,7 +10,7 @@ from typing import Optional, Protocol, runtime_checkable
 from core.config import LLMProvider, Settings
 from core.exceptions import LLMAPIError
 from core.logging import get_logger
-
+from core.cache import CachedLLMHandler
 # Configure logger
 logger = get_logger(__name__)
 
@@ -107,6 +107,11 @@ def get_llm_handler(settings: Settings) -> LLMHandler:
                     model=settings.openai_model,
                     timeout=settings.request_timeout,
                 )
+
+                handler = _build_underlying_handler(settings)  # <- represents existing code
+                if settings.cache_enabled:
+                    handler = CachedLLMHandler(handler, settings)
+                    
                 return handler
 
     elif provider == LLMProvider.ANTHROPIC:

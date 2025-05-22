@@ -87,6 +87,42 @@ class Settings(BaseSettings):
         default=60, description="Number of requests allowed per minute"
     )
 
+    # -------------------------------------------------
+    # Cache settings
+    # -------------------------------------------------
+    class CacheBackendType(str, Enum):
+        MEMORY = "memory"      # in‑process dict (default)
+        FILE   = "file"        # pickled files in a local folder
+        REDIS  = "redis"       # external Redis server
+        MYSQL  = "mysql"       # external MySQL server
+
+    cache_enabled: bool = Field(
+        default=True, description="Enable/disable request‑level caching"
+    )
+    cache_backend: CacheBackendType = Field(
+        default=CacheBackendType.MEMORY,
+        description="Caching backend: memory | file | redis",
+    )
+    cache_expiration: int = Field(
+        default=86_400, description="TTL for cached items (seconds)"
+    )
+    cache_max_size: int = Field(
+        default=10_000, description="Max cached items (only for memory/file)"
+    )
+    cache_dir: str = Field(
+        default=".cache", description="Directory for the FILE backend"
+    )
+    redis_url: Optional[str] = Field(
+        default="redis://localhost:6379/0", description="Redis URL for the REDIS backend"
+    )
+    mysql_url: Optional[str] = Field(
+        default=None,
+        description="SQLAlchemy URL for MySQL cache (e.g. mysql+pymysql://user:pass@host/db/db)"
+    )
+
+
+
+
     @validator("allowed_origins", pre=True)
     def parse_allowed_origins(cls, v):
         """Parse allowed origins from string to list if needed."""
