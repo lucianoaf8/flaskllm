@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 import openai
 import pytest
 
-from api.v1.schemas import PromptSource, PromptType
+from api.v1.schemas.common import PromptSource, PromptType
 from core.exceptions import LLMAPIError
 from llm.handlers.openai import OpenAIHandler
 

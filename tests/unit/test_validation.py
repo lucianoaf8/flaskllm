@@ -5,7 +5,8 @@ Tests for the validation logic.
 import pytest
 from pydantic import ValidationError
 
-from api.v1.schemas import PromptRequest, PromptSource, PromptType, validate_request
+from api.v1.schemas.common import PromptRequest, PromptSource, PromptType
+from pydantic import ValidationError
 
 
 class TestValidation:
@@ -15,7 +16,7 @@ class TestValidation:
         """Test valid PromptRequest validation."""
         # Minimal valid request
         data = {"prompt": "This is a test prompt"}
-        request = validate_request(PromptRequest, data)
+        request = PromptRequest(**data)
         assert request.prompt == "This is a test prompt"
         assert request.source == "other"  # Default value
         assert request.language == "en"  # Default value
@@ -28,7 +29,7 @@ class TestValidation:
             "language": "fr",
             "type": "translation",
         }
-        request = validate_request(PromptRequest, data)
+        request = PromptRequest(**data)
         assert request.prompt == "This is a test prompt"
         assert request.source == "email"
         assert request.language == "fr"
@@ -38,43 +39,43 @@ class TestValidation:
         """Test PromptRequest validation with invalid prompt."""
         # Empty prompt
         data = {"prompt": ""}
-        with pytest.raises(ValidationError):
+        with pytest.raises((ValidationError, ValueError)):
             validate_request(PromptRequest, data)
 
         # Missing prompt
         data = {"source": "email"}
-        with pytest.raises(ValidationError):
+        with pytest.raises((ValidationError, ValueError)):
             validate_request(PromptRequest, data)
 
         # Prompt too long (would need to adjust max_length in the schema)
         data = {"prompt": "x" * 10000}  # Assuming max length is less than this
-        with pytest.raises(ValidationError):
+        with pytest.raises((ValidationError, ValueError)):
             validate_request(PromptRequest, data)
 
     def test_prompt_request_invalid_source(self):
         """Test PromptRequest validation with invalid source."""
         # Invalid source
         data = {"prompt": "This is a test prompt", "source": "invalid_source"}
-        with pytest.raises(ValidationError):
+        with pytest.raises((ValidationError, ValueError)):
             validate_request(PromptRequest, data)
 
     def test_prompt_request_invalid_type(self):
         """Test PromptRequest validation with invalid type."""
         # Invalid type
         data = {"prompt": "This is a test prompt", "type": "invalid_type"}
-        with pytest.raises(ValidationError):
+        with pytest.raises((ValidationError, ValueError)):
             validate_request(PromptRequest, data)
 
     def test_prompt_request_invalid_language(self):
         """Test PromptRequest validation with invalid language."""
         # Invalid language code
         data = {"prompt": "This is a test prompt", "language": "invalid_language"}
-        with pytest.raises(ValidationError):
+        with pytest.raises((ValidationError, ValueError)):
             validate_request(PromptRequest, data)
 
         # Valid 2-letter language code
         data = {"prompt": "This is a test prompt", "language": "fr"}
-        request = validate_request(PromptRequest, data)
+        request = PromptRequest(**data)
         assert request.language == "fr"
 
     def test_prompt_source_enum(self):

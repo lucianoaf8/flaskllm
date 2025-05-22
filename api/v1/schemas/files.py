@@ -1,12 +1,10 @@
+# api/v1/schemas/files.py - Updated for Pydantic V2
 """
-File API Schemas Module
-
-This module defines Pydantic schemas for file-related operations,
-including file upload, processing, and LLM integration with files.
+File API Schemas Module - Updated for Pydantic V2
 """
 from enum import Enum
 from typing import Dict, Any, List, Optional, Union
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 class FileType(str, Enum):
     """File types supported for processing."""
@@ -41,8 +39,9 @@ class FileUploadRequest(BaseModel):
     file: bytes = Field(..., description="File binary content")
     filename: str = Field(..., description="Original filename")
     
-    @validator("filename")
-    def validate_filename(cls, v):
+    @field_validator("filename")
+    @classmethod
+    def validate_filename(cls, v: str) -> str:
         """Validate filename is not empty."""
         if not v.strip():
             raise ValueError("Filename cannot be empty")
@@ -72,8 +71,9 @@ class FileProcessRequest(BaseModel):
         le=1.0
     )
     
-    @validator("filename")
-    def validate_filename(cls, v):
+    @field_validator("filename")
+    @classmethod
+    def validate_filename(cls, v: str) -> str:
         """Validate filename is not empty."""
         if not v.strip():
             raise ValueError("Filename cannot be empty")

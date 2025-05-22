@@ -1,3 +1,4 @@
+# api/v1/routes/core.py - Fixed route registration
 """
 Core API Routes
 
@@ -6,8 +7,9 @@ This module contains the core API routes for the application, including:
 - Main LLM processing endpoints
 - Basic application routes
 """
+import time
 from flask import Blueprint, Response, current_app, jsonify, request
-from api.v1.schemas.common import PromptRequest, PromptResponse
+from api.v1.schemas.common import PromptRequest, PromptResponse, validate_request
 from core.auth import auth_required
 from core.exceptions import InvalidInputError
 from core.logging import get_logger
@@ -16,10 +18,9 @@ from core.logging import get_logger
 # We'll import it only when needed in the route functions
 
 # Create a blueprint for the core routes
-bp = Blueprint('core', __name__, url_prefix='/core')
+bp = Blueprint('core', __name__)
 logger = get_logger(__name__)
 
-# Content consolidated from health_check.py, main_routes.py, and routes.py
 # Health check routes
 @bp.route('/health', methods=['GET'])
 def health_check():
@@ -82,7 +83,7 @@ def process_prompt():
             raise InvalidInputError("Request body is required")
 
         # Validate with schema
-        prompt_request = PromptRequest(**data)
+        prompt_request = validate_request(PromptRequest, data)
         
         # Log request information (without full prompt content for privacy)
         logger.info(
@@ -102,20 +103,20 @@ def process_prompt():
         start_time = time.time()
         result = llm_handler.process_prompt(
             prompt=prompt_request.prompt,
-            source=prompt_request.source,
+            source=prompt_request.source.value if prompt_request.source else None,
             language=prompt_request.language,
-            type=prompt_request.type,
+            type=prompt_request.type.value if prompt_request.type else None,
             **prompt_request.additional_params
         )
         processing_time = time.time() - start_time
         
         # Create response
-        response = PromptResponse(
-            result=result,
-            processing_time=processing_time
-        )
+        response_data = {
+            "result": result,
+            "processing_time": processing_time
+        }
         
-        return jsonify(response.dict()), 200
+        return jsonify(response_data), 200
         
     except InvalidInputError as e:
         logger.warning("Invalid request data", error=str(e))
@@ -126,12 +127,7 @@ def process_prompt():
 
 # Helper functions from health_check.py
 def _get_dependency_versions():
-    """
-    Get versions of key dependencies.
-    
-    Returns:
-        Dictionary of dependency names and versions
-    """
+    """Get versions of key dependencies."""
     try:
         import flask, pydantic, structlog
         
@@ -145,12 +141,7 @@ def _get_dependency_versions():
         return {"error": "Could not retrieve dependency versions"}
 
 def _get_memory_usage():
-    """
-    Get memory usage statistics.
-    
-    Returns:
-        Dictionary of memory usage metrics
-    """
+    """Get memory usage statistics."""
     try:
         import psutil
         process = psutil.Process()
@@ -168,17 +159,7 @@ def _get_memory_usage():
         return {"error": "Could not retrieve memory usage"}
 
 def _check_database_status(settings):
-    """
-    Check database connection status.
-    
-    Args:
-        settings: Application settings
-        
-    Returns:
-        Dictionary with database status information
-    """
-    # This is a simplified implementation - in a real app,
-    # you would actually test the database connection
+    """Check database connection status."""
     try:
         return {
             "status": "connected",
@@ -190,15 +171,7 @@ def _check_database_status(settings):
         return {"status": "error", "error": str(e)}
 
 def _check_cache_status(settings):
-    """
-    Check cache backend status.
-    
-    Args:
-        settings: Application settings
-        
-    Returns:
-        Dictionary with cache status information
-    """
+    """Check cache backend status."""
     try:
         return {
             "status": "connected",
@@ -210,25 +183,16 @@ def _check_cache_status(settings):
         return {"status": "error", "error": str(e)}
 
 def _check_llm_status(settings):
-    """
-    Check LLM provider status.
-    
-    Args:
-        settings: Application settings
-        
-    Returns:
-        Dictionary with LLM provider status information
-    """
+    """Check LLM provider status."""
     try:
         # Lightweight check - just verify we can create the handler
-        # Import lazily to avoid circular imports
         from llm.factory import get_llm_handler
         llm_handler = get_llm_handler(settings)
         
         return {
             "provider": settings.llm_provider,
             "status": "connected",
-            "models_available": [settings.llm_model],
+            "models_available": [settings.openai_model],
         }
     except Exception as e:
         logger.warning("LLM status check failed", error=str(e))

@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 F = TypeVar("F", bound=Callable[..., Any])
 
 
-def validate_token(token: str) -> bool:
+def validate_token(token: str, expected_token: str = None) -> bool:
     """
     Validate an API token.
     
@@ -47,6 +47,10 @@ def validate_token(token: str) -> bool:
             return True
     
     # Fall back to legacy token validation
+    if expected_token:
+        # Use the provided expected token for testing
+        return hmac.compare_digest(token, expected_token)
+        
     settings = current_app.config["SETTINGS"]
     legacy_token = settings.api_token
     

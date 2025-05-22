@@ -1,0 +1,2759 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.0, pluggy-1.6.0 -- /home/luca/Projects/flaskllm/test_venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/luca/Projects/flaskllm
+configfile: pytest.ini
+plugins: mock-3.11.1, requests-mock-1.11.0, anyio-3.7.1, cov-4.1.0
+collecting ... collected 60 items
+
+tests/integration/test_api.py::test_health_check FAILED                  [  1%]
+tests/integration/test_api.py::test_webhook_missing_token FAILED         [  3%]
+tests/integration/test_api.py::test_webhook_invalid_json FAILED          [  5%]
+tests/integration/test_api.py::test_webhook_missing_prompt FAILED        [  6%]
+tests/integration/test_api.py::test_webhook_success FAILED               [  8%]
+tests/integration/test_api_advanced.py::test_webhook_with_all_parameters FAILED [ 10%]
+tests/integration/test_api_advanced.py::test_webhook_llm_api_error FAILED [ 11%]
+tests/integration/test_api_advanced.py::test_webhook_rate_limit_exceeded FAILED [ 13%]
+tests/integration/test_api_advanced.py::test_webhook_invalid_content_type FAILED [ 15%]
+tests/integration/test_api_advanced.py::test_cors_headers FAILED         [ 16%]
+tests/integration/test_api_advanced.py::test_rate_limiting PASSED        [ 18%]
+tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_success ERROR [ 20%]
+tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_with_parameters ERROR [ 21%]
+tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_empty_response ERROR [ 23%]
+tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_api_error ERROR [ 25%]
+tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_auth_error ERROR [ 26%]
+tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_rate_limit_error ERROR [ 28%]
+tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_create_system_prompt ERROR [ 30%]
+tests/unit/test_auth.py::TestAuth::test_get_token_from_request PASSED    [ 31%]
+tests/unit/test_auth.py::TestAuth::test_auth_required_decorator PASSED   [ 33%]
+tests/unit/test_auth.py::TestAuth::test_validate_token_with_expected PASSED [ 35%]
+tests/unit/test_config.py::test_default_settings FAILED                  [ 36%]
+tests/unit/test_config.py::test_environment_variables_override PASSED    [ 38%]
+tests/unit/test_config.py::test_validation_openai_api_key FAILED         [ 40%]
+tests/unit/test_config.py::test_validation_anthropic_api_key FAILED      [ 41%]
+tests/unit/test_error_handling.py::TestErrorHandling::test_api_error_handler PASSED [ 43%]
+tests/unit/test_error_handling.py::TestErrorHandling::test_authentication_error_handler PASSED [ 45%]
+tests/unit/test_error_handling.py::TestErrorHandling::test_invalid_input_error_handler PASSED [ 46%]
+tests/unit/test_error_handling.py::TestErrorHandling::test_llm_api_error_handler PASSED [ 48%]
+tests/unit/test_error_handling.py::TestErrorHandling::test_rate_limit_exceeded_error_handler PASSED [ 50%]
+tests/unit/test_error_handling.py::TestErrorHandling::test_http_exception_handler FAILED [ 51%]
+tests/unit/test_error_handling.py::TestErrorHandling::test_generic_exception_handler FAILED [ 53%]
+tests/unit/test_error_handling.py::TestErrorHandling::test_error_response_format PASSED [ 55%]
+tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_openai FAILED [ 56%]
+tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_anthropic FAILED [ 58%]
+tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_openai_missing_key FAILED [ 60%]
+tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_anthropic_missing_key FAILED [ 61%]
+tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_unsupported_provider FAILED [ 63%]
+tests/unit/test_llm_factory.py::TestLLMFactory::test_handler_implements_protocol FAILED [ 65%]
+tests/unit/test_openai_handler.py::TestOpenAIHandler::test_process_prompt_success ERROR [ 66%]
+tests/unit/test_openai_handler.py::TestOpenAIHandler::test_process_prompt_api_error ERROR [ 68%]
+tests/unit/test_openai_handler.py::TestOpenAIHandler::test_system_prompt_customization ERROR [ 70%]
+tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_init FAILED [ 71%]
+tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_get_key FAILED [ 73%]
+tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_clean_old_requests FAILED [ 75%]
+tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_is_rate_limited FAILED [ 76%]
+tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_add_request FAILED [ 78%]
+tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limit_decorator FAILED [ 80%]
+tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_headers FAILED [ 81%]
+tests/unit/test_templates.py::TestPromptTemplate::test_render_template PASSED [ 83%]
+tests/unit/test_templates.py::TestTemplateStorage::test_add_template ERROR [ 85%]
+tests/unit/test_templates.py::TestTemplateStorage::test_get_template ERROR [ 86%]
+tests/unit/test_validation.py::TestValidation::test_prompt_request_valid FAILED [ 88%]
+tests/unit/test_validation.py::TestValidation::test_prompt_request_invalid_prompt FAILED [ 90%]
+tests/unit/test_validation.py::TestValidation::test_prompt_request_invalid_source FAILED [ 91%]
+tests/unit/test_validation.py::TestValidation::test_prompt_request_invalid_type FAILED [ 93%]
+tests/unit/test_validation.py::TestValidation::test_prompt_request_invalid_language FAILED [ 95%]
+tests/unit/test_validation.py::TestValidation::test_prompt_source_enum PASSED [ 96%]
+tests/unit/test_validation.py::TestValidation::test_prompt_type_enum PASSED [ 98%]
+tests/unit/llm/openai_handler_test.py::test_openai_handler_process_prompt PASSED [100%]
+
+==================================== ERRORS ====================================
+______ ERROR at setup of TestAnthropicHandler.test_process_prompt_success ______
+
+self = <test_anthropic_handler.TestAnthropicHandler object at 0x7ce4d05fe180>
+
+    @pytest.fixture
+    def handler(self):
+        """Create an AnthropicHandler for testing."""
+>       return AnthropicHandler(api_key="test_key", model="claude-2")
+
+tests/unit/test_anthropic_handler.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/handlers/anthropic.py:72: in __init__
+    self.client = Anthropic(api_key=api_key, timeout=timeout)
+test_venv/lib/python3.12/site-packages/anthropic/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0x7ce4cfbfe8d0>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/anthropic/_base_client.py:808: TypeError
+__ ERROR at setup of TestAnthropicHandler.test_process_prompt_with_parameters __
+
+self = <test_anthropic_handler.TestAnthropicHandler object at 0x7ce4d05fee40>
+
+    @pytest.fixture
+    def handler(self):
+        """Create an AnthropicHandler for testing."""
+>       return AnthropicHandler(api_key="test_key", model="claude-2")
+
+tests/unit/test_anthropic_handler.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/handlers/anthropic.py:72: in __init__
+    self.client = Anthropic(api_key=api_key, timeout=timeout)
+test_venv/lib/python3.12/site-packages/anthropic/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0x7ce4cfbe8080>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/anthropic/_base_client.py:808: TypeError
+__ ERROR at setup of TestAnthropicHandler.test_process_prompt_empty_response ___
+
+self = <test_anthropic_handler.TestAnthropicHandler object at 0x7ce4d05fe930>
+
+    @pytest.fixture
+    def handler(self):
+        """Create an AnthropicHandler for testing."""
+>       return AnthropicHandler(api_key="test_key", model="claude-2")
+
+tests/unit/test_anthropic_handler.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/handlers/anthropic.py:72: in __init__
+    self.client = Anthropic(api_key=api_key, timeout=timeout)
+test_venv/lib/python3.12/site-packages/anthropic/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0x7ce4cfbe8f50>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/anthropic/_base_client.py:808: TypeError
+_____ ERROR at setup of TestAnthropicHandler.test_process_prompt_api_error _____
+
+self = <test_anthropic_handler.TestAnthropicHandler object at 0x7ce4d05ff1a0>
+
+    @pytest.fixture
+    def handler(self):
+        """Create an AnthropicHandler for testing."""
+>       return AnthropicHandler(api_key="test_key", model="claude-2")
+
+tests/unit/test_anthropic_handler.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/handlers/anthropic.py:72: in __init__
+    self.client = Anthropic(api_key=api_key, timeout=timeout)
+test_venv/lib/python3.12/site-packages/anthropic/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0x7ce4cfb3f5c0>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/anthropic/_base_client.py:808: TypeError
+____ ERROR at setup of TestAnthropicHandler.test_process_prompt_auth_error _____
+
+self = <test_anthropic_handler.TestAnthropicHandler object at 0x7ce4d05ff3b0>
+
+    @pytest.fixture
+    def handler(self):
+        """Create an AnthropicHandler for testing."""
+>       return AnthropicHandler(api_key="test_key", model="claude-2")
+
+tests/unit/test_anthropic_handler.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/handlers/anthropic.py:72: in __init__
+    self.client = Anthropic(api_key=api_key, timeout=timeout)
+test_venv/lib/python3.12/site-packages/anthropic/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0x7ce4cfb3e210>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/anthropic/_base_client.py:808: TypeError
+_ ERROR at setup of TestAnthropicHandler.test_process_prompt_rate_limit_error __
+
+self = <test_anthropic_handler.TestAnthropicHandler object at 0x7ce4d05ff5c0>
+
+    @pytest.fixture
+    def handler(self):
+        """Create an AnthropicHandler for testing."""
+>       return AnthropicHandler(api_key="test_key", model="claude-2")
+
+tests/unit/test_anthropic_handler.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/handlers/anthropic.py:72: in __init__
+    self.client = Anthropic(api_key=api_key, timeout=timeout)
+test_venv/lib/python3.12/site-packages/anthropic/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0x7ce4cfb3e7b0>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/anthropic/_base_client.py:808: TypeError
+_______ ERROR at setup of TestAnthropicHandler.test_create_system_prompt _______
+
+self = <test_anthropic_handler.TestAnthropicHandler object at 0x7ce4d05ff6b0>
+
+    @pytest.fixture
+    def handler(self):
+        """Create an AnthropicHandler for testing."""
+>       return AnthropicHandler(api_key="test_key", model="claude-2")
+
+tests/unit/test_anthropic_handler.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/handlers/anthropic.py:72: in __init__
+    self.client = Anthropic(api_key=api_key, timeout=timeout)
+test_venv/lib/python3.12/site-packages/anthropic/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0x7ce4cfbe8d70>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/anthropic/_base_client.py:808: TypeError
+_______ ERROR at setup of TestOpenAIHandler.test_process_prompt_success ________
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb57da0>
+api_key = 'test_key', model = 'gpt-3.5-turbo', timeout = 5
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+>           self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+
+llm/handlers/openai.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_venv/lib/python3.12/site-packages/openai/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <openai.OpenAI object at 0x7ce4cfb57c20>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/openai/_base_client.py:738: TypeError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_openai_handler.TestOpenAIHandler object at 0x7ce4d06272f0>
+
+    @pytest.fixture
+    def handler(self):
+        """Create a handler instance for testing."""
+>       return OpenAIHandler(api_key="test_key", model="gpt-3.5-turbo", timeout=5)
+
+tests/unit/test_openai_handler.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb57da0>
+api_key = 'test_key', model = 'gpt-3.5-turbo', timeout = 5
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+            self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+            logger.info(f"OpenAI client initialized successfully with model {model}")
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+>           raise LLMAPIError(f"Failed to initialize OpenAI client: {str(e)}")
+E           core.exceptions.LLMAPIError: Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+
+llm/handlers/openai.py:52: LLMAPIError
+------------------------------ Captured log setup ------------------------------
+ERROR    llm.handlers.openai:openai.py:51 {"event": "Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'", "level": "error", "logger": "llm.handlers.openai", "timestamp": "2025-05-22T23:43:01.832580Z"}
+______ ERROR at setup of TestOpenAIHandler.test_process_prompt_api_error _______
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb6e750>
+api_key = 'test_key', model = 'gpt-3.5-turbo', timeout = 5
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+>           self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+
+llm/handlers/openai.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_venv/lib/python3.12/site-packages/openai/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <openai.OpenAI object at 0x7ce4cfb6f6b0>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/openai/_base_client.py:738: TypeError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_openai_handler.TestOpenAIHandler object at 0x7ce4d0627440>
+
+    @pytest.fixture
+    def handler(self):
+        """Create a handler instance for testing."""
+>       return OpenAIHandler(api_key="test_key", model="gpt-3.5-turbo", timeout=5)
+
+tests/unit/test_openai_handler.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb6e750>
+api_key = 'test_key', model = 'gpt-3.5-turbo', timeout = 5
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+            self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+            logger.info(f"OpenAI client initialized successfully with model {model}")
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+>           raise LLMAPIError(f"Failed to initialize OpenAI client: {str(e)}")
+E           core.exceptions.LLMAPIError: Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+
+llm/handlers/openai.py:52: LLMAPIError
+------------------------------ Captured log setup ------------------------------
+ERROR    llm.handlers.openai:openai.py:51 {"event": "Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'", "level": "error", "logger": "llm.handlers.openai", "timestamp": "2025-05-22T23:43:01.864599Z"}
+_____ ERROR at setup of TestOpenAIHandler.test_system_prompt_customization _____
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb54710>
+api_key = 'test_key', model = 'gpt-3.5-turbo', timeout = 5
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+>           self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+
+llm/handlers/openai.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_venv/lib/python3.12/site-packages/openai/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <openai.OpenAI object at 0x7ce4cfb547a0>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/openai/_base_client.py:738: TypeError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_openai_handler.TestOpenAIHandler object at 0x7ce4d0627560>
+
+    @pytest.fixture
+    def handler(self):
+        """Create a handler instance for testing."""
+>       return OpenAIHandler(api_key="test_key", model="gpt-3.5-turbo", timeout=5)
+
+tests/unit/test_openai_handler.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb54710>
+api_key = 'test_key', model = 'gpt-3.5-turbo', timeout = 5
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+            self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+            logger.info(f"OpenAI client initialized successfully with model {model}")
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+>           raise LLMAPIError(f"Failed to initialize OpenAI client: {str(e)}")
+E           core.exceptions.LLMAPIError: Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+
+llm/handlers/openai.py:52: LLMAPIError
+------------------------------ Captured log setup ------------------------------
+ERROR    llm.handlers.openai:openai.py:51 {"event": "Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'", "level": "error", "logger": "llm.handlers.openai", "timestamp": "2025-05-22T23:43:01.897353Z"}
+___________ ERROR at setup of TestTemplateStorage.test_add_template ____________
+
+self = <test_templates.TestTemplateStorage object at 0x7ce4cfd048f0>
+temp_dir = '/tmp/tmp09t7xzip'
+
+    @pytest.fixture
+    def template_storage(self, temp_dir):
+        """Create a template storage instance."""
+>       return TemplateStorage(templates_dir=temp_dir)
+E       TypeError: TemplateStorage.__init__() got an unexpected keyword argument 'templates_dir'
+
+tests/unit/test_templates.py:56: TypeError
+___________ ERROR at setup of TestTemplateStorage.test_get_template ____________
+
+self = <test_templates.TestTemplateStorage object at 0x7ce4cfd04a10>
+temp_dir = '/tmp/tmpo870_s9_'
+
+    @pytest.fixture
+    def template_storage(self, temp_dir):
+        """Create a template storage instance."""
+>       return TemplateStorage(templates_dir=temp_dir)
+E       TypeError: TemplateStorage.__init__() got an unexpected keyword argument 'templates_dir'
+
+tests/unit/test_templates.py:56: TypeError
+=================================== FAILURES ===================================
+______________________________ test_health_check _______________________________
+
+client = <FlaskClient <Flask 'app'>>
+
+    def test_health_check(client):
+        """Test health check endpoint."""
+        response = client.get("/api/v1/health")
+>       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/integration/test_api.py:41: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "GET", "path": "/api/v1/health", "status": 404, "duration_ms": 0.71, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.008701Z", "request_id": "d38d2a1b-6210-4c13-9558-71369e9ccab3"}
+__________________________ test_webhook_missing_token __________________________
+
+client = <FlaskClient <Flask 'app'>>
+
+    def test_webhook_missing_token(client):
+        """Test webhook without authentication token."""
+        response = client.post("/api/v1/webhook", json={"prompt": "Test prompt"})
+>       assert response.status_code == 401
+E       assert 404 == 401
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/integration/test_api.py:50: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "POST", "path": "/api/v1/webhook", "status": 404, "duration_ms": 0.12, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.097086Z", "request_id": "b45ef2be-230e-4dd7-b1f6-70368218ed70"}
+__________________________ test_webhook_invalid_json ___________________________
+
+client = <FlaskClient <Flask 'app'>>
+
+    def test_webhook_invalid_json(client):
+        """Test webhook with invalid JSON."""
+        response = client.post(
+            "/api/v1/webhook", data="not json", headers={"X-API-Token": "test_token"}
+        )
+>       assert response.status_code == 400
+E       assert 404 == 400
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/integration/test_api.py:60: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "POST", "path": "/api/v1/webhook", "status": 404, "duration_ms": 0.18, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.118942Z", "request_id": "9d48cb5d-0bb5-4e70-820a-63b6899e9182"}
+_________________________ test_webhook_missing_prompt __________________________
+
+client = <FlaskClient <Flask 'app'>>
+
+    def test_webhook_missing_prompt(client):
+        """Test webhook with missing prompt."""
+        response = client.post(
+            "/api/v1/webhook",
+            json={"not_prompt": "value"},
+            headers={"X-API-Token": "test_token"},
+        )
+>       assert response.status_code == 400
+E       assert 404 == 400
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/integration/test_api.py:72: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "POST", "path": "/api/v1/webhook", "status": 404, "duration_ms": 0.11, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.140398Z", "request_id": "eb92604f-3b15-43cc-b7ed-c6753bc09cc7"}
+_____________________________ test_webhook_success _____________________________
+
+args = (), keywargs = {'client': <FlaskClient <Flask 'app'>>}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/usr/lib/python3.12/unittest/mock.py:1387: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+/usr/lib/python3.12/unittest/mock.py:1369: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+/usr/lib/python3.12/unittest/mock.py:1442: in __enter__
+    self.target = self.getter()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'llm.openai_handler.OpenAIHandler'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+>           result = getattr(result, p)
+E           AttributeError: module 'llm' has no attribute 'openai_handler'. Did you mean: 'OpenAIHandler'?
+
+/usr/lib/python3.12/pkgutil.py:528: AttributeError
+_______________________ test_webhook_with_all_parameters _______________________
+
+mock_process_prompt = <MagicMock name='process_prompt' id='137322180465904'>
+client = <FlaskClient <Flask 'app'>>
+auth_headers = {'Content-Type': 'application/json', 'X-API-Token': 'test_token'}
+
+    @patch("llm.handlers.openai.OpenAIHandler.process_prompt")
+    def test_webhook_with_all_parameters(mock_process_prompt, client, auth_headers):
+        """Test webhook with all parameters."""
+        # Setup mock
+        mock_process_prompt.return_value = "Advanced test response"
+    
+        # Send request with all parameters
+        data = {
+            "prompt": "Process this text",
+            "source": "email",
+            "language": "es",
+            "type": "translation",
+        }
+        response = client.post("/api/v1/webhook", json=data, headers=auth_headers)
+    
+        # Verify response
+>       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/integration/test_api_advanced.py:35: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "POST", "path": "/api/v1/webhook", "status": 404, "duration_ms": 0.16, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.255125Z", "request_id": "ea110b54-86f1-4984-a28b-3c9697029194"}
+__________________________ test_webhook_llm_api_error __________________________
+
+mock_get_llm_handler = <MagicMock name='get_llm_handler' id='137322181727280'>
+client = <FlaskClient <Flask 'app'>>
+auth_headers = {'Content-Type': 'application/json', 'X-API-Token': 'test_token'}
+
+    @patch("llm.factory.get_llm_handler")
+    def test_webhook_llm_api_error(mock_get_llm_handler, client, auth_headers):
+        """Test webhook with LLM API error."""
+        # Setup mock to raise an LLM API error
+        mock_handler = MagicMock()
+        mock_handler.process_prompt.side_effect = LLMAPIError("API error")
+        mock_get_llm_handler.return_value = mock_handler
+    
+        # Send request
+        response = client.post(
+            "/api/v1/webhook", json={"prompt": "Test prompt"}, headers=auth_headers
+        )
+    
+        # Verify error response
+>       assert response.status_code == 502
+E       assert 404 == 502
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/integration/test_api_advanced.py:60: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "POST", "path": "/api/v1/webhook", "status": 404, "duration_ms": 0.11, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.275295Z", "request_id": "06f49655-80cf-4a4e-bc50-81222b7b98a5"}
+_______________________ test_webhook_rate_limit_exceeded _______________________
+
+mock_get_llm_handler = <MagicMock name='get_llm_handler' id='137322179062208'>
+client = <FlaskClient <Flask 'app'>>
+auth_headers = {'Content-Type': 'application/json', 'X-API-Token': 'test_token'}
+
+    @patch("llm.factory.get_llm_handler")
+    def test_webhook_rate_limit_exceeded(mock_get_llm_handler, client, auth_headers):
+        """Test webhook with rate limit exceeded error."""
+        # Setup mock to raise a rate limit error
+        mock_handler = MagicMock()
+        mock_handler.process_prompt.side_effect = RateLimitExceededError(
+            "Rate limit exceeded"
+        )
+        mock_get_llm_handler.return_value = mock_handler
+    
+        # Send request
+        response = client.post(
+            "/api/v1/webhook", json={"prompt": "Test prompt"}, headers=auth_headers
+        )
+    
+        # Verify error response
+>       assert response.status_code == 429
+E       assert 404 == 429
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/integration/test_api_advanced.py:82: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "POST", "path": "/api/v1/webhook", "status": 404, "duration_ms": 0.11, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.294308Z", "request_id": "29c045d9-f098-43ab-b83f-3ddbd8a09655"}
+______________________ test_webhook_invalid_content_type _______________________
+
+client = <FlaskClient <Flask 'app'>>
+auth_headers = {'Content-Type': 'application/json', 'X-API-Token': 'test_token'}
+
+    def test_webhook_invalid_content_type(client, auth_headers):
+        """Test webhook with invalid content type."""
+        # Remove content type header
+        headers = {"X-API-Token": auth_headers["X-API-Token"]}
+    
+        # Send request with text instead of JSON
+        response = client.post("/api/v1/webhook", data="This is not JSON", headers=headers)
+    
+        # Verify error response
+>       assert response.status_code == 400
+E       assert 404 == 400
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/integration/test_api_advanced.py:97: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "POST", "path": "/api/v1/webhook", "status": 404, "duration_ms": 0.41, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.316083Z", "request_id": "dacc1d8b-c567-44b0-9dde-b8dbbeb03fc5"}
+______________________________ test_cors_headers _______________________________
+
+client = <FlaskClient <Flask 'app'>>
+
+    def test_cors_headers(client):
+        """Test CORS headers in response."""
+        # Send OPTIONS request to test CORS preflight
+        response = client.options("/api/v1/health")
+    
+        # Verify CORS headers
+        assert "Access-Control-Allow-Origin" in response.headers
+>       assert "Access-Control-Allow-Headers" in response.headers
+E       assert 'Access-Control-Allow-Headers' in Headers([('Content-Type', 'application/json'), ('Content-Length', '49'), ('Access-Control-Allow-Origin', '*'), ('X-Content-Type-Options', 'nosniff'), ('X-Frame-Options', 'DENY'), ('X-XSS-Protection', '1; mode=block'), ('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'), ('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'")])
+E        +  where Headers([('Content-Type', 'application/json'), ('Content-Length', '49'), ('Access-Control-Allow-Origin', '*'), ('X-Content-Type-Options', 'nosniff'), ('X-Frame-Options', 'DENY'), ('X-XSS-Protection', '1; mode=block'), ('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'), ('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'")]) = <WrapperTestResponse streamed [404 NOT FOUND]>.headers
+
+tests/integration/test_api_advanced.py:109: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  core.middleware:middleware.py:110 {"method": "OPTIONS", "path": "/api/v1/health", "status": 404, "duration_ms": 0.16, "ip": "127.0.0.1", "user_agent": "Unknown", "event": "Request error", "level": "warning", "logger": "core.middleware", "timestamp": "2025-05-22T23:43:01.388134Z", "request_id": "9ebff4d0-7920-45e7-a42f-882e7a47a789"}
+____________________________ test_default_settings _____________________________
+
+    def test_default_settings():
+        """Test default settings values."""
+        # Set required environment variables
+        with patch.dict(
+            os.environ, {"API_TOKEN": "test_token", "OPENAI_API_KEY": "test_key"}
+        ):
+            settings = Settings()
+    
+>           assert settings.environment == EnvironmentType.DEVELOPMENT
+E           AssertionError: assert <EnvironmentT...NG: 'testing'> == <EnvironmentT...'development'>
+E             - development
+E             + testing
+
+tests/unit/test_config.py:21: AssertionError
+________________________ test_validation_openai_api_key ________________________
+
+    def test_validation_openai_api_key():
+        """Test validation of OpenAI API key."""
+        # Missing OpenAI API key
+        with patch.dict(os.environ, {"API_TOKEN": "test_token", "LLM_PROVIDER": "openai"}):
+>           with pytest.raises(ValueError) as excinfo:
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/unit/test_config.py:71: Failed
+______________________ test_validation_anthropic_api_key _______________________
+
+    def test_validation_anthropic_api_key():
+        """Test validation of Anthropic API key."""
+        # Missing Anthropic API key
+        with patch.dict(
+            os.environ, {"API_TOKEN": "test_token", "LLM_PROVIDER": "anthropic"}
+        ):
+>           with pytest.raises(ValueError) as excinfo:
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/unit/test_config.py:82: Failed
+________________ TestErrorHandling.test_http_exception_handler _________________
+
+self = <test_error_handling.TestErrorHandling object at 0x7ce4d0625e80>
+client = <FlaskClient <Flask 'test_error_handling'>>
+
+    def test_http_exception_handler(self, client):
+        """Test handling of HTTPException."""
+        response = client.get("/test-http-exception")
+>       assert response.status_code == 500  # Default status code
+E       assert 200 == 500
+E        +  where 200 = <WrapperTestResponse streamed [200 OK]>.status_code
+
+tests/unit/test_error_handling.py:110: AssertionError
+_______________ TestErrorHandling.test_generic_exception_handler _______________
+
+self = <test_error_handling.TestErrorHandling object at 0x7ce4d0625ee0>
+client = <FlaskClient <Flask 'test_error_handling'>>
+
+    def test_generic_exception_handler(self, client):
+        """Test handling of generic Exception."""
+        # In production, this would log the error
+>       with patch("flask.current_app.logger.exception") as mock_logger:
+
+tests/unit/test_error_handling.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/unittest/mock.py:1442: in __enter__
+    self.target = self.getter()
+/usr/lib/python3.12/pkgutil.py:528: in resolve_name
+    result = getattr(result, p)
+test_venv/lib/python3.12/site-packages/werkzeug/local.py:318: in __get__
+    obj = instance._get_current_object()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _get_current_object() -> T:
+        try:
+            obj = local.get()
+        except LookupError:
+>           raise RuntimeError(unbound_message) from None
+E           RuntimeError: Working outside of application context.
+E           
+E           This typically means that you attempted to use functionality that needed
+E           the current application. To solve this, set up an application context
+E           with app.app_context(). See the documentation for more information.
+
+test_venv/lib/python3.12/site-packages/werkzeug/local.py:519: RuntimeError
+__________________ TestLLMFactory.test_get_llm_handler_openai __________________
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb568d0>
+api_key = 'test_key', model = 'gpt-4', timeout = 30
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+>           self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+
+llm/handlers/openai.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_venv/lib/python3.12/site-packages/openai/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <openai.OpenAI object at 0x7ce4cfbf1ee0>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/openai/_base_client.py:738: TypeError
+
+During handling of the above exception, another exception occurred:
+
+settings = Settings(environment=<EnvironmentType.TESTING: 'testing'>, debug=True, api_token='test_token', allowed_origins='*', ll...ption_key=None, max_file_size_mb=10, templates_dir=None, conversation_storage_dir=None, user_settings_storage_dir=None)
+
+    def _get_openai_handler(settings: Settings) -> BaseLLMHandler:
+        """
+        Get an OpenAI handler.
+    
+        Args:
+            settings: Application settings
+    
+        Returns:
+            OpenAI handler instance
+    
+        Raises:
+            LLMAPIError: If handler initialization fails
+        """
+        try:
+            handler_class = _HANDLER_MAPPING[LLMProvider.OPENAI]["standard"]
+            logger.info(
+                f"Initializing {handler_class.__name__}",
+                model=settings.openai_model
+            )
+    
+>           handler = handler_class(
+                api_key=settings.openai_api_key,
+                model=settings.openai_model,
+                timeout=settings.request_timeout,
+            )
+
+llm/factory.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb568d0>
+api_key = 'test_key', model = 'gpt-4', timeout = 30
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+            self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+            logger.info(f"OpenAI client initialized successfully with model {model}")
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+>           raise LLMAPIError(f"Failed to initialize OpenAI client: {str(e)}")
+E           core.exceptions.LLMAPIError: Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+
+llm/handlers/openai.py:52: LLMAPIError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_llm_factory.TestLLMFactory object at 0x7ce4d06265a0>
+
+    def test_get_llm_handler_openai(self):
+        """Test getting OpenAI handler."""
+        # Create settings with OpenAI configuration
+        settings = Settings(
+            llm_provider=LLMProvider.OPENAI,
+            openai_api_key="test_key",
+            openai_model="gpt-4",
+            request_timeout=30,
+        )
+    
+        # Get handler
+        with patch("llm.factory.OpenAIHandler") as mock_openai:
+>           handler = get_llm_handler(settings)
+
+tests/unit/test_llm_factory.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/factory.py:76: in get_llm_handler
+    handler = _get_openai_handler(settings)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+settings = Settings(environment=<EnvironmentType.TESTING: 'testing'>, debug=True, api_token='test_token', allowed_origins='*', ll...ption_key=None, max_file_size_mb=10, templates_dir=None, conversation_storage_dir=None, user_settings_storage_dir=None)
+
+    def _get_openai_handler(settings: Settings) -> BaseLLMHandler:
+        """
+        Get an OpenAI handler.
+    
+        Args:
+            settings: Application settings
+    
+        Returns:
+            OpenAI handler instance
+    
+        Raises:
+            LLMAPIError: If handler initialization fails
+        """
+        try:
+            handler_class = _HANDLER_MAPPING[LLMProvider.OPENAI]["standard"]
+            logger.info(
+                f"Initializing {handler_class.__name__}",
+                model=settings.openai_model
+            )
+    
+            handler = handler_class(
+                api_key=settings.openai_api_key,
+                model=settings.openai_model,
+                timeout=settings.request_timeout,
+            )
+            return handler
+        except Exception as e:
+            logger.error(
+                "Failed to initialize OpenAI handler",
+                error=str(e)
+            )
+>           raise LLMAPIError(f"Failed to initialize OpenAI handler: {str(e)}")
+E           core.exceptions.LLMAPIError: Failed to initialize OpenAI handler: Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+
+llm/factory.py:142: LLMAPIError
+------------------------------ Captured log call -------------------------------
+ERROR    llm.handlers.openai:openai.py:51 {"event": "Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'", "level": "error", "logger": "llm.handlers.openai", "timestamp": "2025-05-22T23:43:01.709564Z"}
+ERROR    llm.factory:factory.py:138 {"error": "Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'", "event": "Failed to initialize OpenAI handler", "level": "error", "logger": "llm.factory", "timestamp": "2025-05-22T23:43:01.709658Z"}
+________________ TestLLMFactory.test_get_llm_handler_anthropic _________________
+
+self = <test_llm_factory.TestLLMFactory object at 0x7ce4d06266c0>
+
+    def test_get_llm_handler_anthropic(self):
+        """Test getting Anthropic handler."""
+        # Create settings with Anthropic configuration
+        settings = Settings(
+            llm_provider=LLMProvider.ANTHROPIC,
+            anthropic_api_key="test_key",
+            anthropic_model="claude-2",
+            request_timeout=30,
+        )
+    
+        # Get handler
+        with patch("llm.factory.AnthropicHandler") as mock_anthropic:
+>           handler = get_llm_handler(settings)
+
+tests/unit/test_llm_factory.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/factory.py:78: in get_llm_handler
+    handler = _get_anthropic_handler(settings)
+llm/factory.py:161: in _get_anthropic_handler
+    return handler_class(
+llm/handlers/anthropic.py:72: in __init__
+    self.client = Anthropic(api_key=api_key, timeout=timeout)
+test_venv/lib/python3.12/site-packages/anthropic/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <anthropic.Anthropic object at 0x7ce4cfc4b350>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/anthropic/_base_client.py:808: TypeError
+____________ TestLLMFactory.test_get_llm_handler_openai_missing_key ____________
+
+self = <test_llm_factory.TestLLMFactory object at 0x7ce4d06267e0>
+
+    def test_get_llm_handler_openai_missing_key(self):
+        """Test error when OpenAI API key is missing."""
+        # Create settings with missing API key
+>       settings = Settings(
+            llm_provider=LLMProvider.OPENAI, openai_api_key=None, openai_model="gpt-4"
+        )
+
+tests/unit/test_llm_factory.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+__pydantic_self__ = <[AttributeError("'Settings' object has no attribute '__pydantic_extra__'") raised in repr()] Settings object at 0x7ce4cfc5dc70>
+_case_sensitive = None, _env_prefix = None, _env_file = PosixPath('.')
+_env_file_encoding = None, _env_nested_delimiter = None, _secrets_dir = None
+values = {'llm_provider': <LLMProvider.OPENAI: 'openai'>, 'openai_api_key': None, 'openai_model': 'gpt-4'}
+
+    def __init__(
+        __pydantic_self__,
+        _case_sensitive: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,
+        _env_file_encoding: str | None = None,
+        _env_nested_delimiter: str | None = None,
+        _secrets_dir: str | Path | None = None,
+        **values: Any,
+    ) -> None:
+        # Uses something other than `self` the first arg to allow "self" as a settable attribute
+>       super().__init__(
+            **__pydantic_self__._settings_build_values(
+                values,
+                _case_sensitive=_case_sensitive,
+                _env_prefix=_env_prefix,
+                _env_file=_env_file,
+                _env_file_encoding=_env_file_encoding,
+                _env_nested_delimiter=_env_nested_delimiter,
+                _secrets_dir=_secrets_dir,
+            )
+        )
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+E       openai_api_key
+E         Value error, OpenAI API key is required when using OpenAI provider [type=value_error, input_value=None, input_type=NoneType]
+E           For further information visit https://errors.pydantic.dev/2.3/v/value_error
+
+test_venv/lib/python3.12/site-packages/pydantic_settings/main.py:71: ValidationError
+__________ TestLLMFactory.test_get_llm_handler_anthropic_missing_key ___________
+
+self = <test_llm_factory.TestLLMFactory object at 0x7ce4d0626900>
+
+    def test_get_llm_handler_anthropic_missing_key(self):
+        """Test error when Anthropic API key is missing."""
+        # Create settings with missing API key
+>       settings = Settings(
+            llm_provider=LLMProvider.ANTHROPIC,
+            anthropic_api_key=None,
+            anthropic_model="claude-2",
+        )
+
+tests/unit/test_llm_factory.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+__pydantic_self__ = <[AttributeError("'Settings' object has no attribute '__pydantic_extra__'") raised in repr()] Settings object at 0x7ce4d060a080>
+_case_sensitive = None, _env_prefix = None, _env_file = PosixPath('.')
+_env_file_encoding = None, _env_nested_delimiter = None, _secrets_dir = None
+values = {'anthropic_api_key': None, 'anthropic_model': 'claude-2', 'llm_provider': <LLMProvider.ANTHROPIC: 'anthropic'>}
+
+    def __init__(
+        __pydantic_self__,
+        _case_sensitive: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,
+        _env_file_encoding: str | None = None,
+        _env_nested_delimiter: str | None = None,
+        _secrets_dir: str | Path | None = None,
+        **values: Any,
+    ) -> None:
+        # Uses something other than `self` the first arg to allow "self" as a settable attribute
+>       super().__init__(
+            **__pydantic_self__._settings_build_values(
+                values,
+                _case_sensitive=_case_sensitive,
+                _env_prefix=_env_prefix,
+                _env_file=_env_file,
+                _env_file_encoding=_env_file_encoding,
+                _env_nested_delimiter=_env_nested_delimiter,
+                _secrets_dir=_secrets_dir,
+            )
+        )
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+E       anthropic_api_key
+E         Value error, Anthropic API key is required when using Anthropic provider [type=value_error, input_value=None, input_type=NoneType]
+E           For further information visit https://errors.pydantic.dev/2.3/v/value_error
+
+test_venv/lib/python3.12/site-packages/pydantic_settings/main.py:71: ValidationError
+___________ TestLLMFactory.test_get_llm_handler_unsupported_provider ___________
+
+self = <test_llm_factory.TestLLMFactory object at 0x7ce4d0626a20>
+
+    def test_get_llm_handler_unsupported_provider(self):
+        """Test error with unsupported provider."""
+        # Create settings with invalid provider
+>       settings = Settings(llm_provider="invalid_provider")
+
+tests/unit/test_llm_factory.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+__pydantic_self__ = <[AttributeError("'Settings' object has no attribute '__pydantic_extra__'") raised in repr()] Settings object at 0x7ce4cfdd0050>
+_case_sensitive = None, _env_prefix = None, _env_file = PosixPath('.')
+_env_file_encoding = None, _env_nested_delimiter = None, _secrets_dir = None
+values = {'llm_provider': 'invalid_provider'}
+
+    def __init__(
+        __pydantic_self__,
+        _case_sensitive: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,
+        _env_file_encoding: str | None = None,
+        _env_nested_delimiter: str | None = None,
+        _secrets_dir: str | Path | None = None,
+        **values: Any,
+    ) -> None:
+        # Uses something other than `self` the first arg to allow "self" as a settable attribute
+>       super().__init__(
+            **__pydantic_self__._settings_build_values(
+                values,
+                _case_sensitive=_case_sensitive,
+                _env_prefix=_env_prefix,
+                _env_file=_env_file,
+                _env_file_encoding=_env_file_encoding,
+                _env_nested_delimiter=_env_nested_delimiter,
+                _secrets_dir=_secrets_dir,
+            )
+        )
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+E       llm_provider
+E         Input should be 'openai','anthropic','xai' or 'open_routine' [type=enum, input_value='invalid_provider', input_type=str]
+
+test_venv/lib/python3.12/site-packages/pydantic_settings/main.py:71: ValidationError
+_______________ TestLLMFactory.test_handler_implements_protocol ________________
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb3f200>
+api_key = 'test_key', model = 'gpt-4', timeout = 30
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+>           self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+
+llm/handlers/openai.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_venv/lib/python3.12/site-packages/openai/_client.py:107: in __init__
+    super().__init__(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <openai.OpenAI object at 0x7ce4cfc7d160>
+
+    def __init__(
+        self,
+        *,
+        version: str,
+        base_url: str | URL,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        transport: Transport | None = None,
+        proxies: ProxiesTypes | None = None,
+        limits: Limits | None = None,
+        http_client: httpx.Client | None = None,
+        custom_headers: Mapping[str, str] | None = None,
+        custom_query: Mapping[str, object] | None = None,
+        _strict_response_validation: bool,
+    ) -> None:
+        if limits is not None:
+            warnings.warn(
+                "The `connection_pool_limits` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
+        else:
+            limits = DEFAULT_LIMITS
+    
+        if transport is not None:
+            warnings.warn(
+                "The `transport` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `transport`")
+    
+        if proxies is not None:
+            warnings.warn(
+                "The `proxies` argument is deprecated. The `http_client` argument should be passed instead",
+                category=DeprecationWarning,
+                stacklevel=3,
+            )
+            if http_client is not None:
+                raise ValueError("The `http_client` argument is mutually exclusive with `proxies`")
+    
+        if not is_given(timeout):
+            # if the user passed in a custom http client with a non-default
+            # timeout set then we use that timeout.
+            #
+            # note: there is an edge case here where the user passes in a client
+            # where they've explicitly set the timeout to match the default timeout
+            # as this check is structural, meaning that we'll think they didn't
+            # pass in a timeout and will ignore it
+            if http_client and http_client.timeout != HTTPX_DEFAULT_TIMEOUT:
+                timeout = http_client.timeout
+            else:
+                timeout = DEFAULT_TIMEOUT
+    
+        super().__init__(
+            version=version,
+            limits=limits,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            base_url=base_url,
+            transport=transport,
+            max_retries=max_retries,
+            custom_query=custom_query,
+            custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
+        )
+>       self._client = http_client or httpx.Client(
+            base_url=base_url,
+            # cast to a valid type because mypy doesn't understand our type narrowing
+            timeout=cast(Timeout, timeout),
+            proxies=proxies,
+            transport=transport,
+            limits=limits,
+        )
+E       TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+
+test_venv/lib/python3.12/site-packages/openai/_base_client.py:738: TypeError
+
+During handling of the above exception, another exception occurred:
+
+settings = Settings(environment=<EnvironmentType.TESTING: 'testing'>, debug=True, api_token='test_token', allowed_origins='*', ll...ption_key=None, max_file_size_mb=10, templates_dir=None, conversation_storage_dir=None, user_settings_storage_dir=None)
+
+    def _get_openai_handler(settings: Settings) -> BaseLLMHandler:
+        """
+        Get an OpenAI handler.
+    
+        Args:
+            settings: Application settings
+    
+        Returns:
+            OpenAI handler instance
+    
+        Raises:
+            LLMAPIError: If handler initialization fails
+        """
+        try:
+            handler_class = _HANDLER_MAPPING[LLMProvider.OPENAI]["standard"]
+            logger.info(
+                f"Initializing {handler_class.__name__}",
+                model=settings.openai_model
+            )
+    
+>           handler = handler_class(
+                api_key=settings.openai_api_key,
+                model=settings.openai_model,
+                timeout=settings.request_timeout,
+            )
+
+llm/factory.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <llm.handlers.openai.OpenAIHandler object at 0x7ce4cfb3f200>
+api_key = 'test_key', model = 'gpt-4', timeout = 30
+
+    def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
+        """
+        Initialize OpenAI handler.
+    
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+    
+        # Initialize OpenAI client with better error handling
+        try:
+            self.client = OpenAI(
+                api_key=api_key,
+                timeout=timeout,
+                max_retries=0,  # We'll handle retries ourselves with tenacity
+            )
+            logger.info(f"OpenAI client initialized successfully with model {model}")
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+>           raise LLMAPIError(f"Failed to initialize OpenAI client: {str(e)}")
+E           core.exceptions.LLMAPIError: Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+
+llm/handlers/openai.py:52: LLMAPIError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_llm_factory.TestLLMFactory object at 0x7ce4d0626b40>
+mock_openai_handler = <MagicMock name='OpenAIHandler' id='137322180158496'>
+
+    @patch("llm.factory.OpenAIHandler")
+    def test_handler_implements_protocol(self, mock_openai_handler):
+        """Test that handlers implement the LLMHandler protocol."""
+        # Setup mock
+        handler_instance = mock_openai_handler.return_value
+        handler_instance.process_prompt.return_value = "test response"
+    
+        # Create settings
+        settings = Settings(llm_provider=LLMProvider.OPENAI, openai_api_key="test_key")
+    
+        # Get handler
+>       handler = get_llm_handler(settings)
+
+tests/unit/test_llm_factory.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llm/factory.py:76: in get_llm_handler
+    handler = _get_openai_handler(settings)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+settings = Settings(environment=<EnvironmentType.TESTING: 'testing'>, debug=True, api_token='test_token', allowed_origins='*', ll...ption_key=None, max_file_size_mb=10, templates_dir=None, conversation_storage_dir=None, user_settings_storage_dir=None)
+
+    def _get_openai_handler(settings: Settings) -> BaseLLMHandler:
+        """
+        Get an OpenAI handler.
+    
+        Args:
+            settings: Application settings
+    
+        Returns:
+            OpenAI handler instance
+    
+        Raises:
+            LLMAPIError: If handler initialization fails
+        """
+        try:
+            handler_class = _HANDLER_MAPPING[LLMProvider.OPENAI]["standard"]
+            logger.info(
+                f"Initializing {handler_class.__name__}",
+                model=settings.openai_model
+            )
+    
+            handler = handler_class(
+                api_key=settings.openai_api_key,
+                model=settings.openai_model,
+                timeout=settings.request_timeout,
+            )
+            return handler
+        except Exception as e:
+            logger.error(
+                "Failed to initialize OpenAI handler",
+                error=str(e)
+            )
+>           raise LLMAPIError(f"Failed to initialize OpenAI handler: {str(e)}")
+E           core.exceptions.LLMAPIError: Failed to initialize OpenAI handler: Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+
+llm/factory.py:142: LLMAPIError
+------------------------------ Captured log call -------------------------------
+ERROR    llm.handlers.openai:openai.py:51 {"event": "Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'", "level": "error", "logger": "llm.handlers.openai", "timestamp": "2025-05-22T23:43:01.798857Z"}
+ERROR    llm.factory:factory.py:138 {"error": "Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'", "event": "Failed to initialize OpenAI handler", "level": "error", "logger": "llm.factory", "timestamp": "2025-05-22T23:43:01.798965Z"}
+____________________ TestRateLimiter.test_rate_limiter_init ____________________
+
+self = <test_rate_limiter.TestRateLimiter object at 0x7ce4d0627bc0>
+limiter = <utils.rate_limiter.RateLimiter object at 0x7ce4cfb6f800>
+
+    def test_rate_limiter_init(self, limiter):
+        """Test RateLimiter initialization."""
+        assert limiter.limit == 5
+        assert limiter.window == 60
+>       assert isinstance(limiter.requests, dict)
+E       AttributeError: 'RateLimiter' object has no attribute 'requests'
+
+tests/unit/test_rate_limiter.py:27: AttributeError
+__________________ TestRateLimiter.test_rate_limiter_get_key ___________________
+
+self = <test_rate_limiter.TestRateLimiter object at 0x7ce4d0627d40>
+limiter = <utils.rate_limiter.RateLimiter object at 0x7ce4cfb6d760>
+
+    def test_rate_limiter_get_key(self, limiter):
+        """Test generating request keys."""
+        # Mock request with remote addr
+>       with patch.object(request, "remote_addr", "127.0.0.1"):
+
+tests/unit/test_rate_limiter.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/unittest/mock.py:1458: in __enter__
+    original, local = self.get_original()
+/usr/lib/python3.12/unittest/mock.py:1421: in get_original
+    original = target.__dict__[name]
+test_venv/lib/python3.12/site-packages/werkzeug/local.py:318: in __get__
+    obj = instance._get_current_object()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _get_current_object() -> T:
+        try:
+            obj = local.get()
+        except LookupError:
+>           raise RuntimeError(unbound_message) from None
+E           RuntimeError: Working outside of request context.
+E           
+E           This typically means that you attempted to use functionality that needed
+E           an active HTTP request. Consult the documentation on testing for
+E           information about how to avoid this problem.
+
+test_venv/lib/python3.12/site-packages/werkzeug/local.py:519: RuntimeError
+_____________ TestRateLimiter.test_rate_limiter_clean_old_requests _____________
+
+self = <test_rate_limiter.TestRateLimiter object at 0x7ce4d0627ef0>
+limiter = <utils.rate_limiter.RateLimiter object at 0x7ce4cfb6c170>
+
+    def test_rate_limiter_clean_old_requests(self, limiter):
+        """Test cleaning old requests."""
+        # Add some requests
+        now = time.time()
+    
+        # Add recent requests (should be kept)
+>       limiter.requests["key1"] = [now - 10]
+E       AttributeError: 'RateLimiter' object has no attribute 'requests'
+
+tests/unit/test_rate_limiter.py:47: AttributeError
+______________ TestRateLimiter.test_rate_limiter_is_rate_limited _______________
+
+self = <test_rate_limiter.TestRateLimiter object at 0x7ce4d0584800>
+limiter = <utils.rate_limiter.RateLimiter object at 0x7ce4cfc5b020>
+
+    def test_rate_limiter_is_rate_limited(self, limiter):
+        """Test rate limiting logic."""
+        # Mock request key
+        with patch.object(limiter, "_get_key", return_value="test_key"):
+            # No requests yet, should not be limited
+>           assert not limiter.is_rate_limited()
+
+tests/unit/test_rate_limiter.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+utils/rate_limiter.py:216: in is_rate_limited
+    self._clean_old_requests()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <utils.rate_limiter.RateLimiter object at 0x7ce4cfc5b020>
+
+    def _clean_old_requests(self):
+        """Remove old requests outside the time window."""
+        import time
+        current_time = time.time()
+    
+>       for key in list(self.requests.keys()):
+E       AttributeError: 'RateLimiter' object has no attribute 'requests'
+
+utils/rate_limiter.py:236: AttributeError
+________________ TestRateLimiter.test_rate_limiter_add_request _________________
+
+self = <test_rate_limiter.TestRateLimiter object at 0x7ce4d05868a0>
+limiter = <utils.rate_limiter.RateLimiter object at 0x7ce4cfb6ffe0>
+
+    def test_rate_limiter_add_request(self, limiter):
+        """Test adding requests."""
+        # Mock request key and time
+        with patch.object(limiter, "_get_key", return_value="test_key"):
+            with patch("time.time", return_value=1000):
+                # Add first request
+>               limiter.add_request()
+E               AttributeError: 'RateLimiter' object has no attribute 'add_request'
+
+tests/unit/test_rate_limiter.py:85: AttributeError
+__________________ TestRateLimiter.test_rate_limit_decorator ___________________
+
+self = <MagicMock name='RateLimiter().add_request' id='137322179165744'>
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected 'add_request' to have been called once. Called 0 times.
+
+/usr/lib/python3.12/unittest/mock.py:923: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_rate_limiter.TestRateLimiter object at 0x7ce4d053f260>
+
+    def test_rate_limit_decorator(self):
+        """Test rate_limit decorator."""
+        # Create a test app
+        app = Flask(__name__)
+    
+        # Create a rate-limited endpoint
+        @app.route("/test")
+        @rate_limit(limit=2, window=60)
+        def test_endpoint():
+            return "OK"
+    
+        # Create a test client
+        client = app.test_client()
+    
+        # Mock the RateLimiter instance
+        with patch("utils.rate_limiter.RateLimiter") as MockLimiter:
+            # Configure the mock
+            limiter_instance = MockLimiter.return_value
+    
+            # First request - not limited
+            limiter_instance.is_rate_limited.return_value = False
+            response = client.get("/test")
+            assert response.status_code == 200
+            assert response.data == b"OK"
+>           limiter_instance.add_request.assert_called_once()
+E           AssertionError: Expected 'add_request' to have been called once. Called 0 times.
+
+tests/unit/test_rate_limiter.py:117: AssertionError
+__________________ TestRateLimiter.test_rate_limiter_headers ___________________
+
+self = <test_rate_limiter.TestRateLimiter object at 0x7ce4d053eed0>
+
+    def test_rate_limiter_headers(self):
+        """Test rate limit headers in response."""
+        # Create a test app
+        app = Flask(__name__)
+    
+        # Create a rate-limited endpoint
+        @app.route("/test-headers")
+        @rate_limit(limit=10, window=60)
+        def test_headers():
+            return "OK"
+    
+        # Create a test client
+        client = app.test_client()
+    
+        # Mock the RateLimiter
+        with patch("utils.rate_limiter.RateLimiter") as MockLimiter:
+            # Configure the mock
+            limiter_instance = MockLimiter.return_value
+            limiter_instance.is_rate_limited.return_value = False
+    
+            # Mock the number of requests
+            limiter_instance.requests = {"test_key": [time.time()] * 3}
+            with patch.object(limiter_instance, "_get_key", return_value="test_key"):
+                # Send request
+                response = client.get("/test-headers")
+    
+                # Check headers
+>               assert "X-RateLimit-Limit" in response.headers
+E               AssertionError: assert 'X-RateLimit-Limit' in Headers([('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', '2')])
+E                +  where Headers([('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', '2')]) = <WrapperTestResponse streamed [200 OK]>.headers
+
+tests/unit/test_rate_limiter.py:156: AssertionError
+___________________ TestValidation.test_prompt_request_valid ___________________
+
+self = <test_validation.TestValidation object at 0x7ce4d053fd40>
+
+    def test_prompt_request_valid(self):
+        """Test valid PromptRequest validation."""
+        # Minimal valid request
+        data = {"prompt": "This is a test prompt"}
+        request = PromptRequest(**data)
+        assert request.prompt == "This is a test prompt"
+        assert request.source == "other"  # Default value
+>       assert request.language == "en"  # Default value
+E       AssertionError: assert None == 'en'
+E        +  where None = PromptRequest(prompt='This is a test prompt', source=<PromptSource.OTHER: 'other'>, language=None, type=<PromptType.SUMMARY: 'summary'>, additional_params={}).language
+
+tests/unit/test_validation.py:22: AssertionError
+______________ TestValidation.test_prompt_request_invalid_prompt _______________
+
+self = <test_validation.TestValidation object at 0x7ce4d0627e90>
+
+    def test_prompt_request_invalid_prompt(self):
+        """Test PromptRequest validation with invalid prompt."""
+        # Empty prompt
+        data = {"prompt": ""}
+        with pytest.raises((ValidationError, ValueError)):
+>           validate_request(PromptRequest, data)
+E           NameError: name 'validate_request' is not defined
+
+tests/unit/test_validation.py:43: NameError
+______________ TestValidation.test_prompt_request_invalid_source _______________
+
+self = <test_validation.TestValidation object at 0x7ce4d0627500>
+
+    def test_prompt_request_invalid_source(self):
+        """Test PromptRequest validation with invalid source."""
+        # Invalid source
+        data = {"prompt": "This is a test prompt", "source": "invalid_source"}
+        with pytest.raises((ValidationError, ValueError)):
+>           validate_request(PromptRequest, data)
+E           NameError: name 'validate_request' is not defined
+
+tests/unit/test_validation.py:60: NameError
+_______________ TestValidation.test_prompt_request_invalid_type ________________
+
+self = <test_validation.TestValidation object at 0x7ce4cfd05010>
+
+    def test_prompt_request_invalid_type(self):
+        """Test PromptRequest validation with invalid type."""
+        # Invalid type
+        data = {"prompt": "This is a test prompt", "type": "invalid_type"}
+        with pytest.raises((ValidationError, ValueError)):
+>           validate_request(PromptRequest, data)
+E           NameError: name 'validate_request' is not defined
+
+tests/unit/test_validation.py:67: NameError
+_____________ TestValidation.test_prompt_request_invalid_language ______________
+
+self = <test_validation.TestValidation object at 0x7ce4cfd049b0>
+
+    def test_prompt_request_invalid_language(self):
+        """Test PromptRequest validation with invalid language."""
+        # Invalid language code
+        data = {"prompt": "This is a test prompt", "language": "invalid_language"}
+        with pytest.raises((ValidationError, ValueError)):
+>           validate_request(PromptRequest, data)
+E           NameError: name 'validate_request' is not defined
+
+tests/unit/test_validation.py:74: NameError
+=============================== warnings summary ===============================
+core/config.py:149
+  /home/luca/Projects/flaskllm/core/config.py:149: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("allowed_origins", pre=True)
+
+core/config.py:156
+  /home/luca/Projects/flaskllm/core/config.py:156: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("openai_api_key")
+
+core/config.py:163
+  /home/luca/Projects/flaskllm/core/config.py:163: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("anthropic_api_key")
+
+core/config.py:172
+  /home/luca/Projects/flaskllm/core/config.py:172: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("xai_api_key")
+
+core/config.py:179
+  /home/luca/Projects/flaskllm/core/config.py:179: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("open_routine_api_key")
+
+core/config.py:188
+  /home/luca/Projects/flaskllm/core/config.py:188: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("redis_url")
+
+core/config.py:195
+  /home/luca/Projects/flaskllm/core/config.py:195: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("mysql_url")
+
+test_venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:219
+  /home/luca/Projects/flaskllm/test_venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:219: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+core/settings/models.py:35
+  /home/luca/Projects/flaskllm/core/settings/models.py:35: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator('temperature')
+
+core/settings/models.py:42
+  /home/luca/Projects/flaskllm/core/settings/models.py:42: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator('max_tokens')
+
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+test_venv/lib/python3.12/site-packages/pydantic/fields.py:792
+  /home/luca/Projects/flaskllm/test_venv/lib/python3.12/site-packages/pydantic/fields.py:792: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    warn(
+
+api/v1/schemas/common.py:70
+  /home/luca/Projects/flaskllm/api/v1/schemas/common.py:70: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("prompt")
+
+api/v1/schemas/common.py:85
+  /home/luca/Projects/flaskllm/api/v1/schemas/common.py:85: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("language")
+
+api/v1/schemas/calendar.py:16
+  /home/luca/Projects/flaskllm/api/v1/schemas/calendar.py:16: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator('date', 'dateTime', always=True)
+
+api/v1/schemas/calendar.py:29
+  /home/luca/Projects/flaskllm/api/v1/schemas/calendar.py:29: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator('email', 'displayName', always=True)
+
+api/v1/schemas/files.py:44
+  /home/luca/Projects/flaskllm/api/v1/schemas/files.py:44: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("filename")
+
+api/v1/schemas/files.py:75
+  /home/luca/Projects/flaskllm/api/v1/schemas/files.py:75: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("filename")
+
+api/v1/schemas/conversations.py:62
+  /home/luca/Projects/flaskllm/api/v1/schemas/conversations.py:62: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.3/migration/
+    @validator("content")
+
+tests/integration/test_api.py: 9 warnings
+tests/integration/test_api_advanced.py: 10 warnings
+tests/unit/test_anthropic_handler.py: 7 warnings
+tests/unit/test_auth.py: 3 warnings
+tests/unit/test_llm_factory.py: 10 warnings
+tests/unit/test_openai_handler.py: 6 warnings
+tests/unit/llm/openai_handler_test.py: 4 warnings
+  /home/luca/Projects/flaskllm/test_venv/lib/python3.12/site-packages/structlog/processors.py:480: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return datetime.datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_api.py::test_health_check - assert 404 == 200
+FAILED tests/integration/test_api.py::test_webhook_missing_token - assert 404...
+FAILED tests/integration/test_api.py::test_webhook_invalid_json - assert 404 ...
+FAILED tests/integration/test_api.py::test_webhook_missing_prompt - assert 40...
+FAILED tests/integration/test_api.py::test_webhook_success - AttributeError: ...
+FAILED tests/integration/test_api_advanced.py::test_webhook_with_all_parameters
+FAILED tests/integration/test_api_advanced.py::test_webhook_llm_api_error - a...
+FAILED tests/integration/test_api_advanced.py::test_webhook_rate_limit_exceeded
+FAILED tests/integration/test_api_advanced.py::test_webhook_invalid_content_type
+FAILED tests/integration/test_api_advanced.py::test_cors_headers - assert 'Ac...
+FAILED tests/unit/test_config.py::test_default_settings - AssertionError: ass...
+FAILED tests/unit/test_config.py::test_validation_openai_api_key - Failed: DI...
+FAILED tests/unit/test_config.py::test_validation_anthropic_api_key - Failed:...
+FAILED tests/unit/test_error_handling.py::TestErrorHandling::test_http_exception_handler
+FAILED tests/unit/test_error_handling.py::TestErrorHandling::test_generic_exception_handler
+FAILED tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_openai
+FAILED tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_anthropic
+FAILED tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_openai_missing_key
+FAILED tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_anthropic_missing_key
+FAILED tests/unit/test_llm_factory.py::TestLLMFactory::test_get_llm_handler_unsupported_provider
+FAILED tests/unit/test_llm_factory.py::TestLLMFactory::test_handler_implements_protocol
+FAILED tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_init
+FAILED tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_get_key
+FAILED tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_clean_old_requests
+FAILED tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_is_rate_limited
+FAILED tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_add_request
+FAILED tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limit_decorator
+FAILED tests/unit/test_rate_limiter.py::TestRateLimiter::test_rate_limiter_headers
+FAILED tests/unit/test_validation.py::TestValidation::test_prompt_request_valid
+FAILED tests/unit/test_validation.py::TestValidation::test_prompt_request_invalid_prompt
+FAILED tests/unit/test_validation.py::TestValidation::test_prompt_request_invalid_source
+FAILED tests/unit/test_validation.py::TestValidation::test_prompt_request_invalid_type
+FAILED tests/unit/test_validation.py::TestValidation::test_prompt_request_invalid_language
+ERROR tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_success
+ERROR tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_with_parameters
+ERROR tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_empty_response
+ERROR tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_api_error
+ERROR tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_auth_error
+ERROR tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_process_prompt_rate_limit_error
+ERROR tests/unit/test_anthropic_handler.py::TestAnthropicHandler::test_create_system_prompt
+ERROR tests/unit/test_openai_handler.py::TestOpenAIHandler::test_process_prompt_success
+ERROR tests/unit/test_openai_handler.py::TestOpenAIHandler::test_process_prompt_api_error
+ERROR tests/unit/test_openai_handler.py::TestOpenAIHandler::test_system_prompt_customization
+ERROR tests/unit/test_templates.py::TestTemplateStorage::test_add_template - ...
+ERROR tests/unit/test_templates.py::TestTemplateStorage::test_get_template - ...
+============ 33 failed, 15 passed, 75 warnings, 12 errors in 1.17s =============

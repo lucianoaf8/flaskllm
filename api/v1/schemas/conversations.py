@@ -1,12 +1,11 @@
+# api/v1/schemas/conversations.py - Updated for Pydantic V2
 """
-Conversation Schema Definitions
-
-This module contains Pydantic schemas for conversation-related operations.
+Conversation Schema Definitions - Updated for Pydantic V2
 """
 from typing import List, Dict, Optional, Any, Union
 from datetime import datetime
 from enum import Enum
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 class MessageRole(str, Enum):
     """Role of a message in a conversation."""
@@ -59,8 +58,9 @@ class MessageRequest(BaseModel):
     role: MessageRole = Field(..., description="Message role")
     content: str = Field(..., description="Message content")
     
-    @validator("content")
-    def validate_content(cls, v):
+    @field_validator("content")
+    @classmethod
+    def validate_content(cls, v: str) -> str:
         """Validate message content is not empty."""
         if not v.strip():
             raise ValueError("Message content cannot be empty")

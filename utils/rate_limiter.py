@@ -210,6 +210,38 @@ class RateLimiter:
         elif token in self.tokens:
             self.tokens[token] = 0
 
+    def is_rate_limited(self) -> bool:
+        """Check if the current request is rate limited."""
+        key = self._get_key()
+        self._clean_old_requests()
+        
+        if key not in self.requests:
+            return False
+            
+        return len(self.requests[key]) >= self.limit
+        
+    def _get_key(self) -> str:
+        """Get the key for rate limiting."""
+        try:
+            from flask import request
+            return f"rate_limit:{request.remote_addr}"
+        except:
+            return "rate_limit:unknown"
+            
+    def _clean_old_requests(self):
+        """Remove old requests outside the time window."""
+        import time
+        current_time = time.time()
+        
+        for key in list(self.requests.keys()):
+            self.requests[key] = [
+                req_time for req_time in self.requests[key]
+                if current_time - req_time < self.window
+            ]
+            
+            if not self.requests[key]:
+                del self.requests[key]
+
 
 # Decorator for simple rate limiting without Flask-Limiter
 def rate_limit(limit: int = 60, window: int = 60, key_func: Optional[Callable[[], str]] = None):

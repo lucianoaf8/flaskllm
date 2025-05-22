@@ -1,16 +1,16 @@
+# api/v1/schemas/common.py - Updated for Pydantic V2
 """
-Common API Schemas Module
+Common API Schemas Module - Updated for Pydantic V2
 
 This module defines Pydantic schemas for request and response validation that are
-common across multiple API endpoints. It provides model classes for input validation,
-error handling, and response formatting.
+common across multiple API endpoints.
 """
 import re
 from enum import Enum
 from typing import Any, Dict, List, Optional, Type, TypeVar, Union
 
 from flask import current_app
-from pydantic import BaseModel, Field, validator, ValidationError
+from pydantic import BaseModel, Field, field_validator, ValidationError
 
 from core.constants import MAX_PROMPT_LENGTH
 from core.exceptions import InvalidInputError
@@ -18,61 +18,61 @@ from core.exceptions import InvalidInputError
 
 class PromptSource(str, Enum):
     """Source of the prompt."""
-    EMAIL = "email"       # Email content
-    MEETING = "meeting"   # Meeting transcript
-    DOCUMENT = "document" # Document text
-    CHAT = "chat"        # Chat conversation
-    OTHER = "other"      # Other source
+    EMAIL = "email"
+    MEETING = "meeting"
+    DOCUMENT = "document"
+    CHAT = "chat"
+    OTHER = "other"
 
 
 class PromptType(str, Enum):
     """Type of processing to perform."""
-    SUMMARY = "summary"        # Generate a summary
-    KEYWORDS = "keywords"      # Extract keywords
-    SENTIMENT = "sentiment"    # Analyze sentiment
-    ENTITIES = "entities"      # Extract named entities
-    TRANSLATION = "translation" # Translate content
-    CUSTOM = "custom"         # Custom processing
+    SUMMARY = "summary"
+    KEYWORDS = "keywords"
+    SENTIMENT = "sentiment"
+    ENTITIES = "entities"
+    TRANSLATION = "translation"
+    CUSTOM = "custom"
 
 
 class PromptRequest(BaseModel):
-    """
-    Schema for prompt processing request.
-    
-    This model validates incoming prompt processing requests, ensuring
-    they have the required fields and formats before processing.
-    """
+    """Schema for prompt processing request."""
     prompt: str = Field(
         ..., 
-        description="The text to process", 
-        example="Summarize this meeting: we need to reduce hiring."
+        description="The text to process",
+        json_schema_extra={"example": "Summarize this meeting: we need to reduce hiring."}
     )
     source: Optional[PromptSource] = Field(
         default=PromptSource.OTHER, 
         description="Source of the prompt",
-        example="meeting"
+        json_schema_extra={"example": "meeting"}
     )
     language: Optional[str] = Field(
         default=None, 
         description="Target language code (ISO 639-1)",
-        example="en"
+        json_schema_extra={"example": "en"}
     )
     type: Optional[PromptType] = Field(
         default=PromptType.SUMMARY, 
         description="Type of processing to perform",
-        example="summary"
+        json_schema_extra={"example": "summary"}
     )
     additional_params: Dict[str, Any] = Field(
         default_factory=dict,
         description="Additional parameters for the LLM provider"
     )
 
-    @validator("prompt")
-    def validate_prompt_length(cls, v, values, **kwargs):
+    @field_validator("prompt")
+    @classmethod
+    def validate_prompt_length(cls, v: str) -> str:
         """Validate prompt length against configured maximum."""
         # Get max_length from configuration if available
-        settings = current_app.config.get("SETTINGS") if current_app else None
-        max_length = getattr(settings, "max_prompt_length", MAX_PROMPT_LENGTH) if settings else MAX_PROMPT_LENGTH
+        try:
+            settings = current_app.config.get("SETTINGS") if current_app else None
+            max_length = getattr(settings, "max_prompt_length", MAX_PROMPT_LENGTH) if settings else MAX_PROMPT_LENGTH
+        except RuntimeError:
+            # Outside application context
+            max_length = MAX_PROMPT_LENGTH
         
         if len(v) > max_length:
             raise ValueError(
@@ -82,8 +82,9 @@ class PromptRequest(BaseModel):
             raise ValueError("Prompt cannot be empty or contain only whitespace")
         return v
 
-    @validator("language")
-    def validate_language(cls, v):
+    @field_validator("language")
+    @classmethod
+    def validate_language(cls, v: Optional[str]) -> Optional[str]:
         """Validate language code format using ISO 639-1 pattern."""
         if v is None:
             return v
@@ -106,46 +107,32 @@ class ErrorDetail(BaseModel):
 
 
 class ErrorResponse(BaseModel):
-    """
-    Schema for error responses.
-    
-    This model defines the standard error response format used across
-    all API endpoints for consistency.
-    """
-    error: str = Field(..., description="Error message", example="Invalid input data")
-    code: Optional[str] = Field(None, description="Error code", example="VAL_2001")
+    """Schema for error responses."""
+    error: str = Field(..., description="Error message", json_schema_extra={"example": "Invalid input data"})
+    code: Optional[str] = Field(None, description="Error code", json_schema_extra={"example": "VAL_2001"})
     details: Optional[List[ErrorDetail]] = Field(None, description="Detailed error information")
 
 
 class PromptResponse(BaseModel):
-    """
-    Schema for prompt processing response.
-    
-    This model defines the expected response format for prompt processing,
-    including the processed result and metadata.
-    """
+    """Schema for prompt processing response."""
     result: str = Field(
         ..., 
-        description="Processed result", 
-        example="The company plans to reduce hiring to cut costs."
+        description="Processed result",
+        json_schema_extra={"example": "The company plans to reduce hiring to cut costs."}
     )
     processing_time: float = Field(
         ..., 
         description="Processing time in seconds",
-        example=1.25
+        json_schema_extra={"example": 1.25}
     )
 
 
 class StreamingRequest(BaseModel):
-    """
-    Schema for streaming request.
-    
-    This model validates incoming streaming requests.
-    """
+    """Schema for streaming request."""
     prompt: str = Field(
         ..., 
-        description="The text to process", 
-        example="Generate a story about a space adventure."
+        description="The text to process",
+        json_schema_extra={"example": "Generate a story about a space adventure."}
     )
     max_tokens: Optional[int] = Field(
         default=1000,
@@ -158,12 +145,7 @@ class StreamingRequest(BaseModel):
 
 
 class GenericResponse(BaseModel):
-    """
-    Generic response envelope following project guidelines.
-    
-    This model provides a standard response envelope structure that
-    contains the primary data and optional metadata.
-    """
+    """Generic response envelope."""
     data: Dict[str, Any] = Field(..., description="Primary response data")
     meta: Optional[Dict[str, Any]] = Field(None, description="Response metadata")
 

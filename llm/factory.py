@@ -76,7 +76,7 @@ def get_llm_handler(settings: Settings) -> BaseLLMHandler:
         handler = _get_openai_handler(settings)
     elif provider == LLMProvider.ANTHROPIC:
         handler = _get_anthropic_handler(settings)
-    elif provider == LLMProvider.OPENROUTER:
+    elif provider == LLMProvider.OPEN_ROUTINE:
         handler = _get_openrouter_handler(settings)
     else:
         raise LLMAPIError(f"Unsupported LLM provider: {provider}")
@@ -104,7 +104,7 @@ def _validate_provider_config(provider: LLMProvider, settings: Settings) -> None
         raise LLMAPIError("OpenAI API key is not configured")
     elif provider == LLMProvider.ANTHROPIC and not settings.anthropic_api_key:
         raise LLMAPIError("Anthropic API key is not configured")
-    elif provider == LLMProvider.OPENROUTER and not settings.openrouter_api_key:
+    elif provider == LLMProvider.OPEN_ROUTINE and not settings.openrouter_api_key:
         raise LLMAPIError("OpenRouter API key is not configured")
 
 
@@ -175,7 +175,7 @@ def _get_openrouter_handler(settings: Settings) -> BaseLLMHandler:
     Returns:
         OpenRouter handler instance
     """
-    handler_class = _HANDLER_MAPPING[LLMProvider.OPENROUTER]["standard"]
+    handler_class = _HANDLER_MAPPING[LLMProvider.OPEN_ROUTINE]["standard"]
     logger.info(
         f"Initializing {handler_class.__name__}", 
         model=settings.openrouter_model

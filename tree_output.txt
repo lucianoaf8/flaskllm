@@ -27,6 +27,7 @@
 ├── ./app.py
 ├── ./app_startup_test.py
 ├── ./audit_template.txt
+├── ./check_dependencies.py
 ├── ./comprehensive_validation.py
 ├── ./core
 │   ├── ./core/auth
@@ -54,6 +55,13 @@
 │   │   ├── ./core/settings/models.py
 │   │   └── ./core/settings/storage.py
 │   └── ./core/xai_config.py
+├── ./data
+│   ├── ./data/conversations
+│   ├── ./data/templates
+│   ├── ./data/tokens
+│   ├── ./data/tokens.db
+│   ├── ./data/tokens.key
+│   └── ./data/user_settings
 ├── ./docs
 │   ├── ./docs/architecture.md
 │   ├── ./docs/chat.md
@@ -66,6 +74,8 @@
 │   ├── ./docs/Review.md
 │   ├── ./docs/task-list-v2.md
 │   └── ./docs/task-list-v3.md
+├── ./fix_anthropic_imports.py
+├── ./fix_tests.py
 ├── ./integrations
 │   ├── ./integrations/google_auth.py
 │   ├── ./integrations/google_calendar_service.py
@@ -86,6 +96,7 @@
 │   └── ./llm/utils
 │       ├── ./llm/utils/direct_clients.py
 │       └── ./llm/utils/__init__.py
+├── ./manual_fixes.py
 ├── ./migration_checklist.txt
 ├── ./migration_complete_summary.txt
 ├── ./mypy.ini
@@ -93,15 +104,21 @@
 ├── ./phase2_migration_log.txt
 ├── ./phase3_migration_log.txt
 ├── ./phase4_migration_log.txt
+├── ./project_diagnostics.py
 ├── ./pytest.ini
+├── ./pytest_output.txt
 ├── ./README.md
 ├── ./requirements-dev.txt
 ├── ./requirements.txt
 ├── ./run_tests.py
 ├── ./run_tests.sh
+├── ./test_app_startup.py
+├── ./test_minimal.py
+├── ./test_runner.py
 ├── ./tests
 │   ├── ./tests/conftest_addition.py
 │   ├── ./tests/conftest.py
+│   ├── ./tests/fixtures
 │   ├── ./tests/integration
 │   │   ├── ./tests/integration/test_api_advanced.py
 │   │   └── ./tests/integration/test_api.py
@@ -139,4 +156,4 @@
 │   └── ./utils/validation.py
 └── ./wsgi.py
 
-27 directories, 113 files
+33 directories, 124 files
