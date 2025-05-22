@@ -30,6 +30,15 @@ class LLMProvider(str, Enum):
     # Add other providers as needed
 
 
+class CacheBackendType(str, Enum):
+    """Supported cache backend types."""
+    
+    MEMORY = "memory"  # in‑process dict (default)
+    FILE = "file"      # pickled files in a local folder
+    REDIS = "redis"    # external Redis server
+    MYSQL = "mysql"    # external MySQL server
+
+
 class Settings(BaseSettings):
     """
     Application settings with validation.
@@ -90,18 +99,12 @@ class Settings(BaseSettings):
     # -------------------------------------------------
     # Cache settings
     # -------------------------------------------------
-    class CacheBackendType(str, Enum):
-        MEMORY = "memory"      # in‑process dict (default)
-        FILE   = "file"        # pickled files in a local folder
-        REDIS  = "redis"       # external Redis server
-        MYSQL  = "mysql"       # external MySQL server
-
     cache_enabled: bool = Field(
         default=True, description="Enable/disable request‑level caching"
     )
     cache_backend: CacheBackendType = Field(
         default=CacheBackendType.MEMORY,
-        description="Caching backend: memory | file | redis",
+        description="Caching backend: memory | file | redis | mysql",
     )
     cache_expiration: int = Field(
         default=86_400, description="TTL for cached items (seconds)"
@@ -128,6 +131,18 @@ class Settings(BaseSettings):
     token_encryption_key: Optional[str] = Field(
         default=None, 
         description="Encryption key for token storage"
+    )
+    
+    # File and storage settings
+    max_file_size_mb: int = Field(default=10, description="Maximum file size in MB")
+    templates_dir: Optional[str] = Field(
+        default=None, description="Directory for prompt templates"
+    )
+    conversation_storage_dir: Optional[str] = Field(
+        default=None, description="Directory for conversation storage"
+    )
+    user_settings_storage_dir: Optional[str] = Field(
+        default=None, description="Directory for user settings storage"
     )
 
 
@@ -168,6 +183,20 @@ class Settings(BaseSettings):
             raise ValueError(
                 "Open Routine API key is required when using Open Routine provider"
             )
+        return v
+        
+    @validator("redis_url")
+    def validate_redis_url(cls, v, values):
+        """Validate that Redis URL is provided when Redis is selected as cache backend."""
+        if values.get("cache_backend") == CacheBackendType.REDIS and not v:
+            raise ValueError("Redis URL is required when using Redis cache backend")
+        return v
+        
+    @validator("mysql_url")
+    def validate_mysql_url(cls, v, values):
+        """Validate that MySQL URL is provided when MySQL is selected as cache backend."""
+        if values.get("cache_backend") == CacheBackendType.MYSQL and not v:
+            raise ValueError("MySQL URL is required when using MySQL cache backend")
         return v
 
     class Config:

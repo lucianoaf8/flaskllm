@@ -1,4 +1,4 @@
-# flaskllm/api/__init__.py
+# api/__init__.py
 """
 API Blueprint Module
 

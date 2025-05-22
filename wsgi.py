@@ -1,16 +1,18 @@
 # wsgi.py
 import os
 import sys
+import pathlib
 
-# Add the project directory to the system path
-project_home = os.path.expanduser("~")
-project_path = os.path.join(project_home, "Projects/flaskllm")
+# Add the project directory to the system path using relative path resolution
+project_path = str(pathlib.Path(__file__).parent.absolute())
 if project_path not in sys.path:
     sys.path.append(project_path)
 
-# Configure virtual environment
-os.environ["VIRTUAL_ENV"] = os.path.join(project_path, "venv")
-os.environ["PATH"] = os.path.join(project_path, "venv/bin:") + os.environ["PATH"]
+# Configure virtual environment if it exists
+venv_path = os.path.join(project_path, "venv")
+if os.path.exists(venv_path):
+    os.environ["VIRTUAL_ENV"] = venv_path
+    os.environ["PATH"] = os.path.join(venv_path, "bin:") + os.environ["PATH"]
 
 # Set environment variables (better to use PythonAnywhere's environment variables UI)
 os.environ["ENVIRONMENT"] = "production"

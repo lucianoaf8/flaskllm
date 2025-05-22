@@ -3,7 +3,8 @@
 OpenAI Handler Module V2
 
 This module implements a more robust LLM handler for OpenAI's API with comprehensive
-error handling for v1.x of the OpenAI Python library.
+error handling for v1.x of the OpenAI Python library. It uses the BaseLLMHandler
+interface for consistent behavior across handler implementations.
 """
 from typing import Any, Dict, List, Optional
 
@@ -20,12 +21,13 @@ from tenacity import (
 from api.v1.schemas import PromptSource, PromptType
 from core.exceptions import LLMAPIError
 from core.logging import get_logger
+from .base_llm_handler import BaseLLMHandler
 
 # Configure logger
 logger = get_logger(__name__)
 
 
-class OpenAIHandlerV2:
+class OpenAIHandlerV2(BaseLLMHandler):
     """Improved handler for processing prompts with OpenAI's API."""
 
     def __init__(self, api_key: str, model: str = "gpt-4o", timeout: int = 30):
@@ -37,9 +39,7 @@ class OpenAIHandlerV2:
             model: OpenAI model to use
             timeout: Request timeout in seconds
         """
-        self.api_key = api_key
-        self.model = model
-        self.timeout = timeout
+        super().__init__(api_key, model, timeout)
 
         # Initialize OpenAI client with better error handling
         try:
@@ -72,6 +72,7 @@ class OpenAIHandlerV2:
         source: Optional[str] = None,
         language: Optional[str] = None,
         type: Optional[str] = None,
+        **kwargs: Any,
     ) -> str:
         """
         Process a prompt using the OpenAI API.
@@ -81,6 +82,7 @@ class OpenAIHandlerV2:
             source: Source of the prompt (email, meeting, etc.)
             language: Target language code (ISO 639-1)
             type: Type of processing to perform
+            **kwargs: Additional parameters for the API call
 
         Returns:
             Processed result as a string
@@ -95,21 +97,25 @@ class OpenAIHandlerV2:
             # Log the request (without the full prompt for privacy)
             logger.info(
                 "Sending request to OpenAI",
-                extra={
-                    "model": self.model,
-                    "prompt_length": len(prompt),
-                    "source": source,
-                    "language": language,
-                    "type": type,
-                },
+                model=self.model,
+                prompt_length=len(prompt),
+                source=source,
+                language=language,
+                type=type,
             )
 
+            # Extract API parameters from kwargs or use defaults
+            temperature = kwargs.get("temperature", 0.3)
+            max_tokens = kwargs.get("max_tokens", 1024)
+            
             # Send request to OpenAI with proper error handling
             response: ChatCompletion = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
-                temperature=0.3,  # Lower temperature for more focused responses
-                max_tokens=1024,  # Adjust based on expected response length
+                temperature=temperature,
+                max_tokens=max_tokens,
+                **{k: v for k, v in kwargs.items() 
+                   if k not in ["temperature", "max_tokens"]}
             )
 
             # Extract and return the response content with proper null checking
@@ -122,7 +128,10 @@ class OpenAIHandlerV2:
                 logger.error("Empty message content from OpenAI API")
                 raise LLMAPIError("Empty message content from OpenAI API")
 
-            logger.info("Successfully received response from OpenAI API")
+            logger.info(
+                "Successfully received response from OpenAI API",
+                response_length=len(message.content)
+            )
             return message.content
 
         except openai.AuthenticationError as e:
@@ -176,7 +185,7 @@ class OpenAIHandlerV2:
         messages: List[Dict[str, str]] = [
             {
                 "role": "system",
-                "content": self._create_system_prompt(source, language, type),
+                "content": self.create_system_prompt(source, language, type),
             }
         ]
 
@@ -185,14 +194,14 @@ class OpenAIHandlerV2:
 
         return messages
 
-    def _create_system_prompt(
+    def create_system_prompt(
         self,
         source: Optional[str] = None,
         language: Optional[str] = None,
         type: Optional[str] = None,
     ) -> str:
         """
-        Create a system prompt based on the parameters.
+        Create a system prompt that guides the model's behavior.
 
         Args:
             source: Source of the prompt (email, meeting, etc.)
@@ -200,13 +209,9 @@ class OpenAIHandlerV2:
             type: Type of processing to perform
 
         Returns:
-            System prompt for the OpenAI API
+            System prompt as a string
         """
-        # Start with a base system prompt
-        system_prompt = (
-            "You are an AI assistant that helps process text content. "
-            "Be concise, accurate, and helpful."
-        )
+        system_prompt = ""
 
         # Add source-specific instructions
         if source == PromptSource.EMAIL:

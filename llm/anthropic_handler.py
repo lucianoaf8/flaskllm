@@ -2,13 +2,13 @@
 """
 Anthropic Handler Module
 
-This module implements the LLM handler for Anthropic's Claude API.
+This module implements the LLM handler for Anthropic's Claude API using the BaseLLMHandler
+interface for consistent behavior across handler implementations.
 """
-from typing import Optional, cast
+from typing import Dict, List, Optional, Any
 
 import anthropic
-from anthropic import Anthropic
-from anthropic.types import ContentBlock
+from anthropic import Anthropic, APIError, APITimeoutError, RateLimitError
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -19,15 +19,16 @@ from tenacity import (
 from api.v1.schemas import PromptSource, PromptType
 from core.exceptions import LLMAPIError
 from core.logging import get_logger
+from .base_llm_handler import BaseLLMHandler
 
 # Configure logger
 logger = get_logger(__name__)
 
 
-class AnthropicHandler:
+class AnthropicHandler(BaseLLMHandler):
     """Handler for processing prompts with Anthropic's Claude API."""
 
-    def __init__(self, api_key: str, model: str = "claude-2", timeout: int = 30):
+    def __init__(self, api_key: str, model: str = "claude-3-opus-20240229", timeout: int = 30):
         """
         Initialize Anthropic handler.
 
@@ -36,14 +37,12 @@ class AnthropicHandler:
             model: Anthropic model to use
             timeout: Request timeout in seconds
         """
-        self.api_key = api_key
-        self.model = model
-        self.timeout = timeout
+        super().__init__(api_key, model, timeout)
         self.client = Anthropic(api_key=api_key, timeout=timeout)
         self.max_tokens_to_sample = 1024  # Adjust based on expected response length
 
     @retry(
-        retry=retry_if_exception_type(anthropic.APIError),
+        retry=retry_if_exception_type((APIError, APITimeoutError, RateLimitError)),
         wait=wait_exponential(multiplier=1, min=2, max=30),
         stop=stop_after_attempt(3),
     )
@@ -53,6 +52,7 @@ class AnthropicHandler:
         source: Optional[str] = None,
         language: Optional[str] = None,
         type: Optional[str] = None,
+        **kwargs: Any,
     ) -> str:
         """
         Process a prompt using the Anthropic API.
@@ -62,6 +62,7 @@ class AnthropicHandler:
             source: Source of the prompt (email, meeting, etc.)
             language: Target language code (ISO 639-1)
             type: Type of processing to perform
+            **kwargs: Additional parameters for the API call
 
         Returns:
             Processed result as a string
@@ -70,8 +71,8 @@ class AnthropicHandler:
             LLMAPIError: If the Anthropic API returns an error
         """
         try:
-            # Create system prompt and user prompt
-            system_prompt = self._create_system_prompt(source, language, type)
+            # Create system prompt based on the parameters
+            system_prompt = self.create_system_prompt(source, language, type)
 
             # Log the request (without the full prompt for privacy)
             logger.info(
@@ -83,120 +84,61 @@ class AnthropicHandler:
                 type=type,
             )
 
+            # Extract API parameters from kwargs or use defaults
+            max_tokens = kwargs.get("max_tokens", 1024)
+            temperature = kwargs.get("temperature", 0.3)
+            
+            # Prepare message parameters
+            message_params = {
+                "model": self.model,
+                "system": system_prompt,
+                "messages": [
+                    {"role": "user", "content": prompt},
+                ],
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+            }
+            
+            # Add any additional parameters from kwargs
+            for k, v in kwargs.items():
+                if k not in ["max_tokens", "temperature"]:
+                    message_params[k] = v
+
             # Send request to Anthropic
-            response = self.client.messages.create(
-                model=self.model,
-                system=system_prompt,
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=self.max_tokens_to_sample,
-                temperature=0.3,  # Lower temperature for more focused responses
-            )
+            response = self.client.messages.create(**message_params)
 
             # Extract and return the response content
-            if not response.content:
+            if not response.content or len(response.content) == 0:
                 raise LLMAPIError("Empty response from Anthropic API")
 
-            # Get the first content block
+            # Get the text content from the first content block
             content_block = response.content[0]
+            if content_block.type != "text":
+                raise LLMAPIError(
+                    f"Unexpected content type from Anthropic API: {content_block.type}"
+                )
 
-            # Check if it's a text block and has text content
-            if content_block.type != "text" or not content_block.text:
-                raise LLMAPIError("Invalid or empty response from Anthropic API")
-
-            # Text is now guaranteed to be a string
-            result = cast(str, content_block.text)
+            result = content_block.text
+            logger.info(
+                "Received response from Anthropic",
+                model=self.model,
+                response_length=len(result),
+            )
+            
             return result
 
         except anthropic.AuthenticationError as e:
             logger.error("Anthropic authentication error", error=str(e))
-            raise LLMAPIError("Authentication error with Anthropic API")
+            raise LLMAPIError(f"Authentication error with Anthropic API: {str(e)}")
 
-        except anthropic.RateLimitError as e:
+        except RateLimitError as e:
             logger.error("Anthropic rate limit exceeded", error=str(e))
-            raise LLMAPIError("Rate limit exceeded with Anthropic API")
+            raise LLMAPIError(f"Rate limit exceeded with Anthropic API: {str(e)}")
 
-        except anthropic.APIError as e:
+        except APIError as e:
             logger.error("Anthropic API error", error=str(e))
             raise LLMAPIError(f"Error from Anthropic API: {str(e)}")
 
         except Exception as e:
             logger.exception("Unexpected error with Anthropic API", error=str(e))
             raise LLMAPIError(f"Unexpected error: {str(e)}")
-
-    def _create_system_prompt(
-        self,
-        source: Optional[str] = None,
-        language: Optional[str] = None,
-        type: Optional[str] = None,
-    ) -> str:
-        """
-        Create a system prompt based on the parameters.
-
-        Args:
-            source: Source of the prompt (email, meeting, etc.)
-            language: Target language code (ISO 639-1)
-            type: Type of processing to perform
-
-        Returns:
-            System prompt for the Anthropic API
-        """
-        # Start with a base system prompt
-        system_prompt = (
-            "You are an AI assistant that helps process text content. "
-            "Be concise, accurate, and helpful."
-        )
-
-        # Add source-specific instructions
-        if source == PromptSource.EMAIL:
-            system_prompt += (
-                " The content is from an email. "
-                "Focus on extracting the key information and action items."
-            )
-        elif source == PromptSource.MEETING:
-            system_prompt += (
-                " The content is from a meeting transcript. "
-                "Focus on decisions, action items, and key discussion points."
-            )
-        elif source == PromptSource.DOCUMENT:
-            system_prompt += (
-                " The content is from a document. "
-                "Focus on extracting the main themes and important details."
-            )
-
-        # Add type-specific instructions
-        if type == PromptType.SUMMARY:
-            system_prompt += (
-                " Create a concise summary of the content, "
-                "focusing on the most important information. "
-                "Use bullet points for key points if appropriate."
-            )
-        elif type == PromptType.KEYWORDS:
-            system_prompt += (
-                " Extract the most important keywords and phrases from the content. "
-                "Return them as a comma-separated list."
-            )
-        elif type == PromptType.SENTIMENT:
-            system_prompt += (
-                " Analyze the sentiment of the content. "
-                "Consider the tone, emotion, and attitude expressed. "
-                "Classify as positive, negative, or neutral, with a brief explanation."
-            )
-        elif type == PromptType.ENTITIES:
-            system_prompt += (
-                " Extract named entities from the content, such as people, organizations, "
-                + "locations, dates, and product names. "  # noqa: E501
-                + "Format as a structured list."
-            )
-
-        elif type == PromptType.TRANSLATION:
-            target_lang = language or "English"
-            system_prompt += (
-                f" Translate the content into {target_lang}. "
-                "Maintain the original meaning and tone as much as possible."
-            )
-
-        # Language-specific instructions (if not already covered by translation)
-        if language and type != PromptType.TRANSLATION:
-            system_prompt += f" Respond in {language}."
-
-        return system_prompt

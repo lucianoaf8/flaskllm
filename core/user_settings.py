@@ -1,8 +1,22 @@
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
-from uuid import uuid4
+# flaskllm/core/user_settings.py
+"""
+User Settings Module
 
-from pydantic import BaseModel, Field
+This module defines data models for storing and managing user-specific settings
+and preferences using Pydantic. These models provide structured storage, validation,
+and manipulation of configuration options that can be customized per user.
+
+The main components are:
+- LLMSettings: Model-specific settings for LLM interactions
+- UISettings: User interface customization options
+- Preference: Individual user preference key-value pairs
+- UserSettings: Container for all user settings with helper methods
+"""
+
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union, ClassVar
+
+from pydantic import BaseModel, Field, validator
 
 
 class LLMSettings(BaseModel):
@@ -14,6 +28,20 @@ class LLMSettings(BaseModel):
     max_tokens: Optional[int] = None
     system_prompt: Optional[str] = None
     parameters: Dict[str, Any] = Field(default_factory=dict)
+    
+    @validator('temperature')
+    def validate_temperature(cls, v):
+        """Validate that temperature is between 0 and 2."""
+        if v is not None and (v < 0 or v > 2):
+            raise ValueError('Temperature must be between 0 and 2')
+        return v
+        
+    @validator('max_tokens')
+    def validate_max_tokens(cls, v):
+        """Validate that max_tokens is positive."""
+        if v is not None and v <= 0:
+            raise ValueError('Max tokens must be greater than 0')
+        return v
 
 
 class UISettings(BaseModel):
@@ -44,6 +72,9 @@ class UserSettings(BaseModel):
     favorite_templates: List[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    # Fields to exclude from serialization for security/privacy
+    PRIVATE_FIELDS: ClassVar[List[str]] = []
 
     def get_preference(self, key: str, default: Any = None) -> Any:
         """
@@ -98,6 +129,43 @@ class UserSettings(BaseModel):
         for i, pref in enumerate(self.preferences):
             if pref.key == key:
                 del self.preferences[i]
-                self.updated_at = datetime.utcnow()
+                self.update_timestamp()
                 return True
         return False
+        
+    def update_timestamp(self) -> None:
+        """
+        Update the updated_at timestamp to current UTC time.
+        Call this method whenever the settings are modified.
+        """
+        self.updated_at = datetime.utcnow()
+        
+    def to_dict(self, exclude_private: bool = True) -> Dict[str, Any]:
+        """
+        Convert settings to a dictionary for storage.
+        
+        Args:
+            exclude_private: Whether to exclude private fields
+            
+        Returns:
+            Dictionary representation of settings
+        """
+        data = self.dict()
+        if exclude_private and self.PRIVATE_FIELDS:
+            for field in self.PRIVATE_FIELDS:
+                if field in data:
+                    data.pop(field)
+        return data
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'UserSettings':
+        """
+        Create settings from a dictionary.
+        
+        Args:
+            data: Dictionary data
+            
+        Returns:
+            UserSettings instance
+        """
+        return cls(**data)

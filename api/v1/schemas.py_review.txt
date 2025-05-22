@@ -1,0 +1,31 @@
+File: api/v1/schemas.py
+Purpose: Defines Pydantic schemas for API request and response validation, including enums for prompt sources and types, and validation logic for requests.
+
+Issues Found:
+1. Hardcoded max_length: The prompt length validator has a hardcoded max_length value (4000) with a comment indicating it should come from the configuration in a real app.
+
+2. Limited validation: The language validator only checks length, not format (e.g., it would accept "xx" as valid, even though it's not a valid language code).
+
+3. Inconsistent exception handling: The validate_request function catches all exceptions, but only wraps them as InvalidInputError without preserving the original validation details.
+
+4. Limited response schemas: Only has PromptResponse but lacks schemas for error responses or other API endpoints.
+
+5. Documentation gaps: While the schemas have field descriptions, they lack examples that would be useful for Swagger documentation.
+
+6. No imports for pydantic_schemas.py: The file exists in the directory but isn't being used or imported.
+
+Recommendations:
+1. Get max_length from application configuration instead of hardcoding it.
+2. Enhance language validation to check against actual ISO 639-1 codes.
+3. Improve exception handling to preserve detailed validation errors.
+4. Add response schemas for error cases and other endpoints.
+5. Add examples to all fields to enhance Swagger documentation.
+6. Review the relationship between this file and pydantic_schemas.py.
+
+Fixes Applied:
+- Updated prompt length validator to use configuration value instead of hardcoding
+- Enhanced language validation to use a regex pattern for ISO 639-1 codes
+- Improved validate_request function to preserve validation details
+- Added examples to field definitions for better Swagger documentation
+- Added ErrorResponse schema for consistent error handling
+- Added GenericResponse schema for standardized response format

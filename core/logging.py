@@ -15,7 +15,7 @@ import structlog
 from flask import Flask, request
 
 
-def request_id_contextualizer(logger, method_name, event_dict):
+def request_id_contextualizer(logger, method_name, event_dict) -> Dict[str, Any]:
     """
     Add request ID to log context if available.
 
@@ -32,18 +32,20 @@ def request_id_contextualizer(logger, method_name, event_dict):
             # Use existing X-Request-ID header or generate a new one
             request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
             event_dict["request_id"] = request_id
-    except:
+    except RuntimeError:
         # In case we're outside a request context
+        # Flask raises RuntimeError when request is accessed outside context
         pass
     return event_dict
 
 
-def configure_logging(app: Optional[Flask] = None) -> None:
+def configure_logging(app: Optional[Flask] = None, log_level: Optional[int] = None) -> None:
     """
     Configure structured logging for the application.
 
     Args:
         app: Flask application instance
+        log_level: Optional log level (use logging.INFO, logging.DEBUG, etc.)
     """
     # Configure structlog processors
     processors = [
@@ -57,8 +59,13 @@ def configure_logging(app: Optional[Flask] = None) -> None:
         structlog.processors.UnicodeDecoder(),
     ]
 
+    # Determine if we're in debug mode
+    is_debug = False
+    if app:
+        is_debug = app.config.get("DEBUG", False)
+    
     # Add JSON renderer for production, console renderer for development
-    if app and not app.config.get("DEBUG", False):
+    if app and not is_debug:
         # Use JSON formatter for production
         processors.append(structlog.processors.JSONRenderer())
     else:
@@ -73,11 +80,16 @@ def configure_logging(app: Optional[Flask] = None) -> None:
         wrapper_class=structlog.stdlib.BoundLogger,
         cache_logger_on_first_use=True,
     )
+    
+    # Determine log level
+    if log_level is None:
+        # Use INFO as default, but respect DEBUG mode
+        log_level = logging.DEBUG if is_debug else logging.INFO
 
     # Configure standard logging to use structlog
     logging.basicConfig(
         format="%(message)s",
-        level=logging.INFO,
+        level=log_level,
         stream=sys.stdout,
     )
 
@@ -125,22 +137,26 @@ class RequestLogger:
         """
         request_start = time.time()
 
-        def custom_start_response(status, headers, exc_info=None):
-            status_code = int(status.split(" ")[0])
-            processing_time = (time.time() - request_start) * 1000
+        def custom_start_response(status: str, headers: list, exc_info=None) -> Any:
+            try:
+                status_code = int(status.split(" ")[0])
+                processing_time = (time.time() - request_start) * 1000
 
-            # Log request and response details
-            self.logger.info(
-                "Request processed",
-                method=environ.get("REQUEST_METHOD"),
-                path=environ.get("PATH_INFO"),
-                query=environ.get("QUERY_STRING"),
-                status=status_code,
-                processing_time=f"{processing_time:.2f}ms",
-                remote_addr=environ.get("REMOTE_ADDR"),
-                user_agent=environ.get("HTTP_USER_AGENT", ""),
-            )
-
+                # Log request and response details
+                self.logger.info(
+                    "Request processed",
+                    method=environ.get("REQUEST_METHOD"),
+                    path=environ.get("PATH_INFO"),
+                    query=environ.get("QUERY_STRING"),
+                    status=status_code,
+                    processing_time=f"{processing_time:.2f}ms",
+                    remote_addr=environ.get("REMOTE_ADDR"),
+                    user_agent=environ.get("HTTP_USER_AGENT", ""),
+                )
+            except Exception as e:
+                # Don't let logging errors affect the response
+                self.logger.error("Error in request logging", error=str(e))
+                
             return start_response(status, headers, exc_info)
 
         return self.app(environ, custom_start_response)

@@ -1,0 +1,136 @@
+.
+├── ./api
+│   ├── ./api/docs
+│   │   ├── ./api/docs/__init__.py
+│   │   └── ./api/docs/swagger_docs.py
+│   ├── ./api/__init__.py
+│   └── ./api/v1
+│       ├── ./api/v1/authorizations.py
+│       ├── ./api/v1/calendar_routes.py
+│       ├── ./api/v1/calendar_schemas.py
+│       ├── ./api/v1/conversation_routes.py
+│       ├── ./api/v1/conversation_routes.py_review.txt
+│       ├── ./api/v1/examples_routes.py
+│       ├── ./api/v1/file_routes.py
+│       ├── ./api/v1/file_routes.py_review.txt
+│       ├── ./api/v1/file_upload_routes.py
+│       ├── ./api/v1/google_auth.py
+│       ├── ./api/v1/health_check.py
+│       ├── ./api/v1/__init__.py
+│       ├── ./api/v1/__init__.py_review.txt
+│       ├── ./api/v1/main_routes.py
+│       ├── ./api/v1/pydantic_schemas.py
+│       ├── ./api/v1/pydantic_schemas.py_review.txt
+│       ├── ./api/v1/routes.py
+│       ├── ./api/v1/routes.py_review.txt
+│       ├── ./api/v1/routes_settings.py
+│       ├── ./api/v1/schemas.py
+│       ├── ./api/v1/schemas.py_review.txt
+│       ├── ./api/v1/streaming_routes.py
+│       ├── ./api/v1/token_routes.py
+│       ├── ./api/v1/user_settings_routes.py
+│       ├── ./api/v1/user_settings_routes.py_review.txt
+│       └── ./api/v1/validators.py
+├── ./app_incorporate.py
+├── ./app.py
+├── ./audit_findings.txt
+├── ./core
+│   ├── ./core/auth.py
+│   ├── ./core/cache.py
+│   ├── ./core/cache.py_review.txt
+│   ├── ./core/config_additions.py
+│   ├── ./core/config_additions.py_review.txt
+│   ├── ./core/config.py
+│   ├── ./core/config.py_review.txt
+│   ├── ./core/constants.py
+│   ├── ./core/constants.py_review.txt
+│   ├── ./core/error_codes.py
+│   ├── ./core/error_codes.py_review.txt
+│   ├── ./core/error_handler.py
+│   ├── ./core/error_handler.py_review.txt
+│   ├── ./core/exceptions.py
+│   ├── ./core/exceptions.py_review.txt
+│   ├── ./core/__init__.py
+│   ├── ./core/__init__.py_review.txt
+│   ├── ./core/logging.py
+│   ├── ./core/logging.py_review.txt
+│   ├── ./core/middleware.py
+│   ├── ./core/middleware.py_review.txt
+│   ├── ./core/token_model.py
+│   ├── ./core/token_service.py
+│   ├── ./core/token_storage.py
+│   ├── ./core/user_settings.py
+│   ├── ./core/user_settings.py_review.txt
+│   ├── ./core/user_settings_storage.py
+│   ├── ./core/user_settings_storage.py_review.txt
+│   ├── ./core/xai_config.py
+│   └── ./core/xai_config.py_review.txt
+├── ./docs
+│   ├── ./docs/architecture.md
+│   ├── ./docs/chat.md
+│   ├── ./docs/deploy_to_pythonanywhere.md
+│   ├── ./docs/flask-llm-guidelines.md
+│   ├── ./docs/project-capabilities.md
+│   ├── ./docs/project-documentation.md
+│   ├── ./docs/project-task-list.md
+│   ├── ./docs/pythonanywhere-development-guide.md
+│   ├── ./docs/Review.md
+│   ├── ./docs/task-list-v2.md
+│   └── ./docs/task-list-v3.md
+├── ./integrations
+│   ├── ./integrations/google_auth.py
+│   ├── ./integrations/google_calendar_service.py
+│   └── ./integrations/secure_google_token_storage.py
+├── ./llm
+│   ├── ./llm/anthropic_handler.py
+│   ├── ./llm/base_llm_handler.py
+│   ├── ./llm/conversation_storage.py
+│   ├── ./llm/factory.py
+│   ├── ./llm/__init__.py
+│   ├── ./llm/openai_direct.py
+│   ├── ./llm/openai_handler.py
+│   ├── ./llm/openai_handler_v2.py
+│   ├── ./llm/openrouter_handler.py
+│   └── ./llm/template_storage.py
+├── ./llm_directory_review.txt
+├── ./mypy.ini
+├── ./pytest.ini
+├── ./README.md
+├── ./requirements-dev.txt
+├── ./requirements.txt
+├── ./run_tests.sh
+├── ./tests
+│   ├── ./tests/conftest_addition.py
+│   ├── ./tests/conftest.py
+│   ├── ./tests/fixtures
+│   ├── ./tests/integration
+│   │   ├── ./tests/integration/test_api_advanced.py
+│   │   └── ./tests/integration/test_api.py
+│   └── ./tests/unit
+│       ├── ./tests/unit/llm
+│       │   └── ./tests/unit/llm/openai_handler_test.py
+│       ├── ./tests/unit/test_anthropic_handler.py
+│       ├── ./tests/unit/test_auth.py
+│       ├── ./tests/unit/test_config.py
+│       ├── ./tests/unit/test_error_handling.py
+│       ├── ./tests/unit/test_llm_factory.py
+│       ├── ./tests/unit/test_openai_handler.py
+│       ├── ./tests/unit/test_rate_limiter.py
+│       ├── ./tests/unit/test_templates.py
+│       └── ./tests/unit/test_validation.py
+├── ./toggle_git_hooks.sh
+├── ./tools
+│   └── ./tools/token_cli.py
+├── ./utils
+│   ├── ./utils/config_loader.py
+│   ├── ./utils/file_processor.py
+│   ├── ./utils/__init__.py
+│   ├── ./utils/logger.py
+│   ├── ./utils/prometheus_metrics.py
+│   ├── ./utils/rate_limiter.py
+│   ├── ./utils/security.py
+│   ├── ./utils/token_validator.py
+│   └── ./utils/validation.py
+└── ./wsgi.py
+
+15 directories, 119 files

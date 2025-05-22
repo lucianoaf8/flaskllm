@@ -1,0 +1,19 @@
+File: __init__.py
+Purpose: This file serves as a Python package marker for the core module. It's currently empty, which indicates that the core module doesn't expose any specific symbols or functionality to be imported directly.
+
+Issues Found: None.
+
+While empty __init__.py files are valid, considering the project guidelines outlined in flask-llm-guidelines.md which encourage using __init__.py files to "expose only necessary imports", this file could potentially be enhanced to expose key components from the core module for easier importing by other parts of the application.
+
+Recommendation: Consider updating the file to expose key components, allowing for cleaner imports like:
+```python
+from flaskllm.core import config, exceptions, error_handler
+```
+Instead of:
+```python
+from flaskllm.core.config import Config
+from flaskllm.core.exceptions import LLMAPIError
+from flaskllm.core.error_handler import handle_error
+```
+
+No changes made since this is a design decision rather than a bug or inconsistency.

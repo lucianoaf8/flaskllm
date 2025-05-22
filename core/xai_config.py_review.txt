@@ -1,0 +1,21 @@
+File: xai_config.py
+Purpose: This file should provide configuration for the XAI (Explainable AI) integration with the LLM API, but currently contains misplaced calendar event schemas.
+
+Issues Found:
+1. CRITICAL ISSUE: The file contains calendar event schemas that are completely unrelated to XAI configuration. These schemas should be in the API schemas directory, not in the core module.
+
+2. Missing functionality: The file does not contain any actual XAI configuration as suggested by its name. It's missing the expected content for configuring explainable AI features.
+
+3. File purpose mismatch: The comment at the top indicates this content belongs in "api/v1/schemas.py" but is incorrectly placed in the core directory.
+
+4. Inconsistent schema validation: The schemas use Marshmallow instead of Pydantic, which is inconsistent with the project guidelines that recommend using Pydantic for validation.
+
+Recommendation:
+1. Move the calendar event schemas to the appropriate location in the API schemas directory (api/v1/schemas.py).
+2. Create a proper XAI configuration file that includes:
+   - Configuration options for explainable AI features
+   - Integration settings for XAI providers
+   - Default parameters for XAI requests
+   - Methods for generating explanations for model outputs
+
+The file should be completely replaced with proper XAI configuration content.

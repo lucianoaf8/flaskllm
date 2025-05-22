@@ -1,46 +1,63 @@
 #!/usr/bin/env python3
 """
-OpenAI Direct Handler
+OpenAI Direct Handler Module
 
-This module implements a direct OpenAI API handler without using the client
-initialization that causes the proxies error.
+This module implements a direct HTTP handler for OpenAI's API without using
+their client library, which can be useful to avoid client initialization issues
+or versioning problems. It uses the BaseLLMHandler interface for consistent behavior
+across handler implementations.
 """
 import json
-import os
 from typing import Any, Dict, List, Optional
 
 import requests
-from tenacity import retry, stop_after_attempt, wait_exponential
+from requests.exceptions import RequestException, Timeout
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from api.v1.schemas import PromptSource, PromptType
 from core.exceptions import LLMAPIError
 from core.logging import get_logger
+from .base_llm_handler import BaseLLMHandler
 
 # Configure logger
 logger = get_logger(__name__)
 
 
-class OpenAIDirectHandler:
-    """
-    Direct handler for OpenAI API without using their client library initialization.
-    Avoids the 'proxies' parameter error.
-    """
+class OpenAIDirectHandler(BaseLLMHandler):
+    """Direct HTTP handler for OpenAI's API."""
+
+    # OpenAI API endpoints - should be configurable for testing or alternative endpoints
+    BASE_URL = "https://api.openai.com/v1"
+    CHAT_COMPLETIONS_URL = f"{BASE_URL}/chat/completions"
 
     def __init__(self, api_key: str, model: str = "gpt-4", timeout: int = 30):
-        """Initialize the handler with API credentials and settings."""
-        self.api_key = api_key
-        self.model = model
-        self.timeout = timeout
-        self.api_url = "https://api.openai.com/v1/chat/completions"
+        """
+        Initialize OpenAI direct handler.
 
-        # Validate the API key is present
+        Args:
+            api_key: OpenAI API key
+            model: OpenAI model to use
+            timeout: Request timeout in seconds
+        """
+        super().__init__(api_key, model, timeout)
+        self.headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
         if not api_key:
             raise LLMAPIError("OpenAI API key is required")
 
-        logger.info(f"Initialized Direct OpenAI handler with model {model}")
+        logger.info(f"Initialized OpenAI direct handler with model {model}")
 
     @retry(
-        wait=wait_exponential(multiplier=1, min=2, max=30), stop=stop_after_attempt(3)
+        retry=retry_if_exception_type((RequestException, Timeout)),
+        wait=wait_exponential(multiplier=1, min=2, max=30),
+        stop=stop_after_attempt(3),
     )
     def process_prompt(
         self,
@@ -48,92 +65,102 @@ class OpenAIDirectHandler:
         source: Optional[str] = None,
         language: Optional[str] = None,
         type: Optional[str] = None,
+        **kwargs: Any,
     ) -> str:
-        """Process a prompt using direct API calls to OpenAI."""
+        """
+        Process a prompt using the OpenAI API directly via HTTP.
+
+        Args:
+            prompt: The prompt to process
+            source: Source of the prompt (email, meeting, etc.)
+            language: Target language code (ISO 639-1)
+            type: Type of processing to perform
+            **kwargs: Additional parameters for the API call
+
+        Returns:
+            Processed result as a string
+
+        Raises:
+            LLMAPIError: If the OpenAI API returns an error
+        """
         try:
-            # Create messages for the API
+            # Create messages based on the prompt and parameters
             messages = self._create_messages(prompt, source, language, type)
 
-            # Log the request (without full prompt for privacy)
-            logger.info(
-                "Sending request to OpenAI API",
-                extra={
-                    "model": self.model,
-                    "prompt_length": len(prompt),
-                    "source": source,
-                    "language": language,
-                    "type": type,
-                },
-            )
-
-            # Prepare the request payload
-            payload = {
+            # Extract API parameters from kwargs or use defaults
+            temperature = kwargs.get("temperature", 0.3)
+            max_tokens = kwargs.get("max_tokens", 1024)
+            
+            # Prepare request data
+            data = {
                 "model": self.model,
                 "messages": messages,
-                "temperature": 0.3,
-                "max_tokens": 1024,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
             }
+            
+            # Add any additional parameters from kwargs
+            for k, v in kwargs.items():
+                if k not in ["temperature", "max_tokens"]:
+                    data[k] = v
 
-            # Set up headers with authentication
-            headers = {
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            }
-
-            # Make the request directly using requests library
-            response = requests.post(
-                self.api_url, headers=headers, json=payload, timeout=self.timeout
+            # Log the request (without the full prompt for privacy)
+            logger.info(
+                "Sending direct request to OpenAI",
+                model=self.model,
+                prompt_length=len(prompt),
+                source=source,
+                language=language,
+                type=type,
             )
 
-            # Check for HTTP errors
-            response.raise_for_status()
+            # Send the request
+            response = requests.post(
+                self.CHAT_COMPLETIONS_URL,
+                headers=self.headers,
+                json=data,
+                timeout=self.timeout,
+            )
 
-            # Parse the response
+            # Handle response status
+            if response.status_code != 200:
+                error_message = self._get_error_message(response)
+                logger.error(
+                    "OpenAI API error",
+                    status_code=response.status_code,
+                    error=error_message,
+                )
+                raise LLMAPIError(
+                    f"OpenAI API error: {response.status_code} - {error_message}"
+                )
+
+            # Extract and return the response content
             response_data = response.json()
-
-            # Validate the response has the expected structure
-            if not response_data.get("choices") or len(response_data["choices"]) == 0:
+            if (
+                not response_data.get("choices")
+                or len(response_data["choices"]) == 0
+                or not response_data["choices"][0].get("message")
+                or not response_data["choices"][0]["message"].get("content")
+            ):
+                logger.error("Empty response from OpenAI API")
                 raise LLMAPIError("Empty response from OpenAI API")
 
-            # Get the message content
-            message = response_data["choices"][0].get("message", {})
-            content = message.get("content", "")
+            result = response_data["choices"][0]["message"]["content"]
+            logger.info(
+                "Received response from OpenAI",
+                model=self.model,
+                response_length=len(result),
+            )
+            
+            return result
 
-            if not content:
-                raise LLMAPIError("Empty message content from OpenAI API")
+        except Timeout:
+            logger.error("Timeout while connecting to OpenAI API")
+            raise LLMAPIError("Timeout while connecting to OpenAI API")
 
-            return content
-
-        except requests.exceptions.HTTPError as e:
-            status_code = e.response.status_code if e.response else 0
-            error_detail = ""
-
-            try:
-                error_data = e.response.json()
-                error_detail = error_data.get("error", {}).get("message", str(e))
-            except:
-                error_detail = str(e)
-
-            logger.error(f"HTTP error from OpenAI API: {status_code} - {error_detail}")
-
-            if status_code == 401:
-                raise LLMAPIError(
-                    f"Authentication error with OpenAI API: {error_detail}"
-                )
-            elif status_code == 429:
-                raise LLMAPIError(
-                    f"Rate limit exceeded with OpenAI API: {error_detail}"
-                )
-            else:
-                raise LLMAPIError(f"Error from OpenAI API: {error_detail}")
-
-        except requests.exceptions.Timeout:
-            logger.error("Request to OpenAI API timed out")
-            raise LLMAPIError("Request to OpenAI API timed out")
-
-        except requests.exceptions.ConnectionError as e:
-            logger.error(f"Connection error with OpenAI API: {str(e)}")
-            raise LLMAPIError(f"Connection error with OpenAI API: {str(e)}")
+        except RequestException as e:
+            logger.error(f"Error connecting to OpenAI API: {str(e)}")
+            raise LLMAPIError(f"Error connecting to OpenAI API: {str(e)}")
 
         except Exception as e:
             logger.exception(f"Unexpected error with OpenAI API: {str(e)}")
@@ -146,12 +173,23 @@ class OpenAIDirectHandler:
         language: Optional[str] = None,
         type: Optional[str] = None,
     ) -> List[Dict[str, str]]:
-        """Create messages for the OpenAI API based on the parameters."""
+        """
+        Create messages for the OpenAI API based on the parameters.
+
+        Args:
+            prompt: The prompt to process
+            source: Source of the prompt (email, meeting, etc.)
+            language: Target language code (ISO 639-1)
+            type: Type of processing to perform
+
+        Returns:
+            List of message dictionaries for the OpenAI API
+        """
         # Start with a system message that guides the model's behavior
         messages: List[Dict[str, str]] = [
             {
                 "role": "system",
-                "content": self._create_system_prompt(source, language, type),
+                "content": self.create_system_prompt(source, language, type),
             }
         ]
 
@@ -160,7 +198,7 @@ class OpenAIDirectHandler:
 
         return messages
 
-    def _create_system_prompt(
+    def create_system_prompt(
         self,
         source: Optional[str] = None,
         language: Optional[str] = None,

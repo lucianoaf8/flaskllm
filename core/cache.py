@@ -7,7 +7,9 @@ import os
 import pickle
 import threading
 import time
-from typing import Optional
+from typing import Optional, AbstractMethod
+
+from sqlalchemy import create_engine, text
 
 from core.config import CacheBackendType, Settings
 from core.exceptions import APIError
@@ -46,11 +48,14 @@ def build_cache_key(
 
 
 class _BaseCache:
-    def get(self, key: str) -> Optional[str]: ...
+    def get(self, key: str) -> Optional[str]:
+        raise NotImplementedError("Subclasses must implement get()")
 
-    def set(self, key: str, value: str, ttl: int) -> None: ...
+    def set(self, key: str, value: str, ttl: int) -> None:
+        raise NotImplementedError("Subclasses must implement set()")
 
-    def invalidate(self, key: str) -> None: ...
+    def invalidate(self, key: str) -> None:
+        raise NotImplementedError("Subclasses must implement invalidate()")
 
 
 class _InMemoryCache(_BaseCache):
@@ -145,7 +150,7 @@ class _RedisCache(_BaseCache):
         self.client.delete(key)
 
 
-class MySQLCache:
+class _MySQLCache(_BaseCache):
     def __init__(self, url: str):
         try:
             self.engine = create_engine(url)
@@ -161,7 +166,7 @@ class MySQLCache:
                 )
             """))
 
-    def get(self, key: str) -> str | None:
+    def get(self, key: str) -> Optional[str]:
         with self.engine.connect() as conn:
             row = conn.execute(
                 text("SELECT expiration, value FROM flaskllm_cache WHERE cache_key = :k"),
@@ -199,7 +204,7 @@ def _backend(settings: Settings) -> _BaseCache:
     if settings.cache_backend == CacheBackendType.MYSQL:
         if not settings.mysql_url:
             raise APIError("MySQL cache selected but mysql_url not set")
-        return MySQLCache(settings.mysql_url)
+        return _MySQLCache(settings.mysql_url)
     return _InMemoryCache(settings.cache_max_size)
 
 

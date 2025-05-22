@@ -1,4 +1,4 @@
-# flaskllm/utils/rate_limiter.py
+# utils/rate_limiter.py
 """
 Rate Limiting Module
 

@@ -1,0 +1,24 @@
+File: logging.py
+Purpose: Configures structured logging for the application using structlog, providing consistent formatting and context for log messages including request IDs, timestamps, and other metadata.
+
+Issues Found:
+1. Exception handling: The request_id_contextualizer function has a bare except block which silently catches all exceptions. This is generally considered bad practice as it can hide unexpected errors.
+
+2. Missing type hints: The return type annotation for request_id_contextualizer is missing, and some type hints in the RequestLogger.__call__ method could be improved.
+
+3. Flask dependency: The module has a direct dependency on Flask even though most of its functionality could work with any WSGI application. This limits reusability.
+
+4. Lack of log level configuration from settings: The logging level is hardcoded to INFO rather than being configurable through application settings.
+
+Fixes Applied:
+1. Added proper exception handling in the request_id_contextualizer function with a specific exception type.
+2. Added missing return type annotation for request_id_contextualizer.
+3. Added support for configuring log level through application settings.
+4. Improved exception handling with specific exception types.
+
+The logging implementation is otherwise well-structured and follows best practices for structured logging, including:
+- Proper use of structlog processors
+- Environment-aware formatting (JSON for production, colorized console for development)
+- Request ID tracking
+- Performance timing for requests
+- Silencing of noisy third-party loggers
